@@ -9,7 +9,7 @@ const profileSchema = new mongoose.Schema({
     type: String,
     default: null,
   },
-  coin: {
+  coins: {
     type: Number,
     default: 0,
   },
