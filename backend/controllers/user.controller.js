@@ -7,7 +7,7 @@ const CustomError = require("../utils/customError");
 exports.register = bigPromise(async (req, res, next) => {
   try {
     await User.validate(req.body);
-    const { email, password } = req.body;
+    const { email, password, name } = req.body;
 
     // Check if the email is already registered
     const existingUser = await User.findOne({ email });
@@ -20,6 +20,7 @@ exports.register = bigPromise(async (req, res, next) => {
     const user = await User.create({
       email,
       password,
+      name,
     });
 
     await Profile.create({
@@ -81,7 +82,7 @@ exports.getProfile = bigPromise(async (req, res, next) => {
     console.log(userId);
 
     // Find the user profile associated with the user ID
-    const profile = await Profile.findOne({ userId });
+    const profile = await Profile.findOne({ userId }).populate("userId");
 
     // Check if profile exists
     if (!profile) {

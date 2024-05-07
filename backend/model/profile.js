@@ -1,10 +1,6 @@
 const mongoose = require("mongoose");
 
 const profileSchema = new mongoose.Schema({
-  name: {
-    type: String,
-    default: null,
-  },
   authCode: {
     type: String,
     default: null,
