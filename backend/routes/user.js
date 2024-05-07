@@ -6,15 +6,16 @@ const { isLoggedIn } = require("../middleware/user");
 const {
   register,
   login,
-  profile,
+  getProfile,
   logout,
+  updateProfile,
 } = require("../controllers/user.controller");
 
 // routes
 router.post("/signup", register);
 router.post("/login", login);
 router.get("/logout", logout);
-router.get("/profile", isLoggedIn, profile);
-router.patch("/profile");
+router.get("/profile", isLoggedIn, getProfile);
+router.patch("/profile", isLoggedIn, updateProfile);
 
 module.exports = router;

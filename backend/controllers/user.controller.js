@@ -1,4 +1,5 @@
 const User = require("../model/user");
+const Profile = require("../model/profile");
 const bigPromise = require("../middleware/bigPromise");
 const cookieToken = require("../utils/cookieToken");
 const CustomError = require("../utils/customError");
@@ -20,6 +21,11 @@ exports.register = bigPromise(async (req, res, next) => {
       email,
       password,
     });
+
+    await Profile.create({
+      userId: user._id,
+    });
+
     cookieToken(user, res, "User Created");
   } catch (error) {
     return next(new CustomError(error.message, 400));
@@ -69,6 +75,55 @@ exports.logout = bigPromise(async (req, res, next) => {
   });
 });
 
-exports.profile = async (req, res, next) => {
-  res.send("Welcome");
-};
+exports.getProfile = bigPromise(async (req, res, next) => {
+  try {
+    const userId = req.user._id;
+    console.log(userId);
+
+    // Find the user profile associated with the user ID
+    const profile = await Profile.findOne({ userId });
+
+    // Check if profile exists
+    if (!profile) {
+      return next(new CustomError("Profile not found", 404));
+    }
+
+    res.status(200).json({
+      success: true,
+      profile,
+    });
+  } catch (error) {
+    next(new CustomError(error.message, 400));
+  }
+});
+
+exports.updateProfile = bigPromise(async (req, res, next) => {
+  try {
+    const userId = req.user._id;
+
+    // Find the user profile associated with the user ID
+    const profile = await Profile.findOne({ userId });
+
+    // Check if profile exists
+    if (!profile) {
+      return next(new CustomError("Profile not found", 404));
+    }
+
+    // Update profile fields
+    const { name, authCode, coins, reminder } = req.body;
+    profile.name = name || profile.name;
+    profile.authCode = authCode || profile.authCode;
+    profile.coins = coins || profile.coins;
+    profile.reminder = reminder || profile.reminder;
+
+    await profile.save();
+
+    res.status(200).json({
+      success: true,
+      message: "Profile updated successfully",
+      profile,
+    });
+  } catch (error) {
+    next(new CustomError(error.message, 400));
+  }
+});
