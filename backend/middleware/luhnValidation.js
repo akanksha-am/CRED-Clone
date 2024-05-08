@@ -3,8 +3,8 @@ const bigPromise = require("./bigPromise");
 const CustomError = require("../utils/customError");
 
 exports.luhnValidation = bigPromise(async (req, res, next) => {
-  if (req.params.id) {
-    req.body.cardNumber = req.params.id;
+  if (req.params.cardNumber) {
+    req.body.cardNumber = req.params.cardNumber;
   }
   const validCard = await luhn.validate(req.body.cardNumber);
   if (!validCard) {
