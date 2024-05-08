@@ -16,12 +16,12 @@ app.use(cookieParser());
 
 // importing routes
 const userRoute = require("./routes/user");
-// const cardRoute = require("./routes/card");
+const cardRoute = require("./routes/card");
 // const rewardRoute = require("./routes/reward");
 
 // Routes middlewares
 app.use("/api/user", userRoute);
-// app.use("/api/cards", cardRoute);
+app.use("/api/cards", cardRoute);
 // app.use("/api/rewards", rewardRoute);
 
 app.use("/", (req, res) => {
