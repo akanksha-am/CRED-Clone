@@ -9,10 +9,10 @@ const transactionSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  credDeb: {
-    type: Boolean,
+  type: {
+    type: String, // or Boolean
+    enum: ["credit", "debit"],
     required: true,
-    default: true,
   },
   category: {
     type: String,
@@ -29,7 +29,7 @@ const transactionSchema = new mongoose.Schema({
   userAssociated: {
     type: String,
   },
-  card: {
+  cardId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "Card",
     required: true,
