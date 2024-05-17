@@ -4,6 +4,9 @@ import Header from "./components/Header";
 import HomeScreen from "./screens/HomeScreen";
 import { Container } from "react-bootstrap";
 import Footer from "./components/Footer";
+import RegisterScreen from "./screens/RegisterScreen";
+import LoginScreen from "./screens/LoginScreen";
+import ProfileScreen from "./screens/ProfileScreen";
 
 function App() {
   return (
@@ -12,6 +15,9 @@ function App() {
       <main className="py-3">
         <Container>
           <Routes>
+            <Route path="/login" Component={LoginScreen} />
+            <Route path="/register" Component={RegisterScreen} />
+            <Route path="/profile" Component={ProfileScreen} />
             <Route path="/" Component={HomeScreen} exact />
           </Routes>
         </Container>
