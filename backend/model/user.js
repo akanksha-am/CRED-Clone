@@ -7,19 +7,19 @@ const crypto = require("crypto");
 const userSchema = new mongoose.Schema({
   email: {
     type: String,
-    required: [true, "Please provide an email"],
+    required: true,
     unique: true,
     trim: true,
-    validate: [validator.isEmail, "Please enter email in correct format"],
+    validate: validator.isEmail,
   },
-  name:{
-    type:String,
-    required:[true, "Please provide an Name"]
+  name: {
+    type: String,
+    required: true,
   },
   password: {
     type: String,
-    required: [true, "Please provide a password"],
-    minlength: [6, "PW should be atleast 6 char"],
+    required: true,
+    minlength: 6,
     select: false, // to ensure this field is not returned by default in queries
   },
   createdAt: {

@@ -7,4 +7,7 @@ export default defineConfig({
   server: {
     port: 80,
   },
+  define: {
+    "process.env.VITE_KEY": JSON.stringify(process.env.VITE_KEY),
+  },
 });
