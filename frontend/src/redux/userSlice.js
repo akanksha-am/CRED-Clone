@@ -6,6 +6,7 @@ const userSlice = createSlice({
     userInfo: localStorage.getItem("userInfo")
       ? JSON.parse(localStorage.getItem("userInfo"))
       : null,
+    profileInfo: null,
     loading: false,
     error: null,
   },
@@ -22,13 +23,14 @@ const userSlice = createSlice({
     loginFailure: (state, action) => {
       state.loading = false;
       state.error = action.payload;
+      state.profileInfo = null;
     },
     logout: (state) => {
-      console.log("Inside logout");
       state.userInfo = null;
       state.loading = false;
       state.error = null;
-      // localStorage.removeItem("userInfo");
+      localStorage.removeItem("userInfo");
+      state.profileInfo = null;
     },
     registerRequest: (state) => {
       state.loading = true;
@@ -42,6 +44,7 @@ const userSlice = createSlice({
     registerFailure: (state, action) => {
       state.loading = false;
       state.error = action.payload;
+      state.profileInfo = null;
     },
     getUserDetailsRequest: (state) => {
       state.loading = true;
@@ -49,7 +52,7 @@ const userSlice = createSlice({
     },
     getUserDetailsSuccess: (state, action) => {
       state.loading = false;
-      state.userInfo = action.payload;
+      state.profileInfo = action.payload;
     },
     getUserDetailsFailure: (state, action) => {
       state.loading = false;
@@ -61,7 +64,8 @@ const userSlice = createSlice({
     },
     updateProfileSuccess: (state, action) => {
       state.loading = false;
-      state.userInfo = action.payload;
+      console.log(action.payload);
+      state.profileInfo = action.payload;
     },
     updateProfileFailure: (state, action) => {
       state.loading = false;

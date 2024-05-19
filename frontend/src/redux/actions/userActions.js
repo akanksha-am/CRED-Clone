@@ -73,19 +73,17 @@ export const register = (name, email, password) => async (dispatch) => {
 };
 
 // @ FETCH CURRENT USER DETAILS
-export const getUserDetails = (id) => async (dispatch, getState) => {
+export const getUserDetails = () => async (dispatch, getState) => {
   try {
     dispatch(getUserDetailsRequest());
-    const {
-      user: { userInfo },
-    } = getState();
+    const { user } = getState();
     const config = {
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${userInfo.token}`,
+        Authorization: `Bearer ${user.userInfo.token}`,
       },
     };
-    const { data } = await axios.get(`/api/user/${id}`, config);
+    const { data } = await axios.get(`/api/user/profile`, config);
     dispatch(getUserDetailsSuccess(data));
   } catch (err) {
     dispatch(
@@ -99,19 +97,41 @@ export const getUserDetails = (id) => async (dispatch, getState) => {
 };
 
 // @ UPDATE USER PROFILE
-export const updateUserProfile = (user) => async (dispatch, getState) => {
+export const updateUserProfile = () => async (dispatch, getState) => {
   try {
     dispatch(updateProfileRequest());
-    const {
-      user: { userInfo },
-    } = getState();
+    const { userInfo } = getState();
     const config = {
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${userInfo.token}`,
       },
     };
-    const { data } = await axios.patch("/api/user/profile", user, config);
+    const { data } = await axios.patch("/api/user/profile", config);
+    dispatch(updateProfileSuccess(data));
+  } catch (err) {
+    dispatch(
+      updateProfileFailure(
+        err.response && err.response.data.message
+          ? err.response.data.message
+          : err.message
+      )
+    );
+  }
+};
+
+export const updateAuthCode = () => async (dispatch, getState) => {
+  try {
+    dispatch(updateProfileRequest());
+    const { user } = getState();
+    const config = {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${user.userInfo.token}`,
+      },
+    };
+    const { data } = await axios.get(`/api/user/authCode`, config);
+    console.log(data);
     dispatch(updateProfileSuccess(data));
   } catch (err) {
     dispatch(
