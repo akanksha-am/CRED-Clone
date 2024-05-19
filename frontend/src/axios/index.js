@@ -1,10 +1,13 @@
 import Axios from "axios";
 
+console.log(import.meta.env.VITE_BACKEND_URL_DEV);
+console.log(import.meta.env.VITE_ENV === "development");
+
 const axios = Axios.create({
   baseURL: `${
-    import.meta.env.NODE_ENV === "development"
-      ? import.meta.env.REACT_APP_BACKEND_URL_DEV
-      : import.meta.env.REACT_APP_BACKEND_URL_PROD
+    import.meta.env.VITE_ENV === "development"
+      ? import.meta.env.VITE_BACKEND_URL_DEV
+      : import.meta.env.VITE_BACKEND_URL_PROD
   }`,
 });
 

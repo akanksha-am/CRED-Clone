@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useState, useEffect } from "react";
 import axios from "../axios";
 import { LinkContainer } from "react-router-bootstrap";
 import {
@@ -41,7 +41,7 @@ const ProfileScreen = () => {
   const [show, setShow] = useState(false);
 
   const userState = useSelector((state) => state.user);
-  const { user, loading, error } = userState;
+  const { userInfo, loading, error } = userState;
 
   //   const userUpdateProfile = useSelector((state) => state.userUpdateProfile);
   //   const { success: updateSuccess } = userUpdateProfile;
@@ -50,21 +50,21 @@ const ProfileScreen = () => {
   const { cards, error: errorCards, loading: loadingCards } = cardList;
 
   useEffect(() => {
-    if (!user) {
+    if (!userInfo) {
       navigate("/login");
     } else {
       dispatch(resetCardDetails());
       dispatch(listCards());
       if (false) {
       } else {
-        initialValues.name = user.name;
-        initialValues.authCode = user.authCode ? user.authCode : "";
-        initialValues.email = user.email;
-        initialValues.phoneNumber = user.phoneNumber;
-        setReminder(user.reminder);
+        initialValues.name = userInfo.name;
+        initialValues.authCode = userInfo.authCode ? userInfo.authCode : "";
+        initialValues.email = userInfo.email;
+        initialValues.phoneNumber = userInfo.phoneNumber;
+        setReminder(userInfo.reminder);
       }
     }
-  }, [dispatch, user]);
+  }, [dispatch, userInfo]);
 
   const submitForm = (values) => {
     const data = { name: values.name };
@@ -93,7 +93,7 @@ const ProfileScreen = () => {
     const config = {
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${user.token}`,
+        Authorization: `Bearer ${userInfo.token}`,
       },
     };
     setDisableReminder(true);
@@ -267,7 +267,7 @@ const ProfileScreen = () => {
                               // readOnly={readOnly}
                               disabled={readOnly}
                             />
-                            <InputGroup.Append>
+                            {/* <InputGroup.Append>
                               <InputGroup.Text>
                                 <i
                                   onClick={handleAuthCodeVisibility}
@@ -278,7 +278,7 @@ const ProfileScreen = () => {
                                   }
                                 ></i>
                               </InputGroup.Text>
-                            </InputGroup.Append>
+                            </InputGroup.Append> */}
                             {errors.authCode && touched.authCode && (
                               <Form.Control.Feedback type="invalid">
                                 {errors.authCode}

@@ -9,7 +9,7 @@ import {
   getCardDetailsRequest,
   getCardDetailsSuccess,
   getCardDetailsFailure,
-} from "./cardSlice";
+} from "../cardSlice";
 
 export const addCard = (card) => async (dispatch, getState) => {
   try {

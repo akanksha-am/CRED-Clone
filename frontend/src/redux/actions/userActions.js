@@ -3,6 +3,7 @@ import {
   loginRequest,
   loginSuccess,
   loginFailure,
+  logout,
   registerRequest,
   registerSuccess,
   registerFailure,
@@ -41,12 +42,12 @@ export const login = (email, password) => async (dispatch) => {
 };
 
 // @ LOGOUT USER
-export const logout = () => (dispatch) => {
-  dispatch(logout());
-};
+// export const logout = () => (dispatch) => {
+//   dispatch(logout());
+// };
 
 // @ REGISTER USER
-export const register = (email, password) => async (dispatch) => {
+export const register = (name, email, password) => async (dispatch) => {
   try {
     dispatch(registerRequest());
     const config = {
@@ -56,7 +57,7 @@ export const register = (email, password) => async (dispatch) => {
     };
     const { data } = await axios.post(
       "/api/user/signup",
-      { email, password },
+      { name, email, password },
       config
     );
     dispatch(registerSuccess(data));

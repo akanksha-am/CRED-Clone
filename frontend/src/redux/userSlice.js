@@ -24,8 +24,11 @@ const userSlice = createSlice({
       state.error = action.payload;
     },
     logout: (state) => {
+      console.log("Inside logout");
       state.userInfo = null;
-      localStorage.removeItem("userInfo");
+      state.loading = false;
+      state.error = null;
+      // localStorage.removeItem("userInfo");
     },
     registerRequest: (state) => {
       state.loading = true;

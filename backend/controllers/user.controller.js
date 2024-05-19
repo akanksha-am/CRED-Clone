@@ -1,3 +1,4 @@
+const validator = require("validator");
 const User = require("../model/user");
 const Profile = require("../model/profile");
 const bigPromise = require("../middleware/bigPromise");
@@ -5,16 +6,29 @@ const cookieToken = require("../utils/cookieToken");
 const CustomError = require("../utils/customError");
 
 exports.register = bigPromise(async (req, res, next) => {
+  const { email, name, password } = req.body;
+
   try {
-    await User.validate(req.body);
-    const { email, password, name } = req.body;
+    if (!email || !name || !password) {
+      res.statusCode = 400;
+      throw new Error("Please provide email, name, and password");
+    }
+
+    if (!validator.isEmail(email)) {
+      res.statusCode = 400;
+      throw new Error("Invalid Email Format");
+    }
+
+    if (password.length < 6) {
+      res.statusCode = 400;
+      throw new Error("Password should be at least 6 characters long");
+    }
 
     // Check if the email is already registered
     const existingUser = await User.findOne({ email });
     if (existingUser) {
-      return next(
-        new CustomError(`Email "${email}" is already registered!`, 409)
-      );
+      res.statusCode = 409;
+      throw new Error(`Email "${email}" is already registered!`);
     }
 
     const user = await User.create({
@@ -29,39 +43,43 @@ exports.register = bigPromise(async (req, res, next) => {
 
     cookieToken(user, res, "User Created");
   } catch (error) {
-    return next(new CustomError(error.message, 400));
+    return next(error);
   }
 });
 
 exports.login = bigPromise(async (req, res, next) => {
   const { email, password } = req.body;
 
-  //check for presence of email and password
-  if (!email || !password) {
-    return next(new CustomError("please provide email and password", 400));
+  try {
+    //check for presence of email and password
+    if (!email || !password) {
+      res.statusCode = 400;
+      throw new Error("please provide email and password");
+    }
+
+    //get user from db
+    const user = await User.findOne({ email }).select("+password");
+
+    //if user not found in db
+    if (!user) {
+      // return next(new Error("Email or password does not match or exist"));
+      res.statusCode = 401;
+      throw new Error("User does not exist");
+    }
+
+    const ispassword = await user.comparePassword(password);
+
+    //if password dont match
+    if (!ispassword) {
+      res.statusCode = 401;
+      throw new Error("Password does not match");
+    }
+
+    //if all goes good we will send the token
+    cookieToken(user, res, "Successfully logged-In");
+  } catch (error) {
+    return next(error);
   }
-
-  //get user from db
-  const user = await User.findOne({ email }).select("+password");
-
-  //if user not found in db
-  if (!user) {
-    return next(
-      new CustomError("Email or password does not match or exist", 400)
-    );
-  }
-
-  const ispassword = await user.comparePassword(password);
-
-  //if password dont match
-  if (!ispassword) {
-    return next(
-      new CustomError("Email or password does not match or exist", 400)
-    );
-  }
-
-  //if all goes good we will send the token
-  cookieToken(user, res, "Successfully logged-In");
 });
 
 exports.logout = bigPromise(async (req, res, next) => {
@@ -86,7 +104,8 @@ exports.getProfile = bigPromise(async (req, res, next) => {
 
     // Check if profile exists
     if (!profile) {
-      return next(new CustomError("Profile not found", 404));
+      res.statusCode = 404;
+      throw new Error("Profile not found");
     }
 
     res.status(200).json({
@@ -94,7 +113,7 @@ exports.getProfile = bigPromise(async (req, res, next) => {
       profile,
     });
   } catch (error) {
-    next(new CustomError(error.message, 400));
+    return next(error);
   }
 });
 
@@ -107,7 +126,8 @@ exports.updateProfile = bigPromise(async (req, res, next) => {
 
     // Check if profile exists
     if (!profile) {
-      return next(new CustomError("Profile not found", 404));
+      res.statusCode = 404;
+      throw new Error("Profile not found");
     }
 
     // Update profile fields
@@ -125,6 +145,6 @@ exports.updateProfile = bigPromise(async (req, res, next) => {
       profile,
     });
   } catch (error) {
-    next(new CustomError(error.message, 400));
+    return next(error);
   }
 });
