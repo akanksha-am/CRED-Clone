@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { Form, Button, Row, Col } from "react-bootstrap";
 import { Formik } from "formik";
 
-import { login } from "../redux/actions/userActions";
+import { getUserDetails, login } from "../redux/actions/userActions";
 import AlertMessage from "../components/AlertMessage";
 import Loader from "../components/Loader";
 import FormContainer from "../components/FormContainer";
@@ -34,7 +34,6 @@ const LoginScreen = () => {
   }, [userInfo, error]);
 
   const submitForm = (values) => {
-    // dispatch(logout());
     dispatch(login(values.email, values.password));
     setShow(true);
   };

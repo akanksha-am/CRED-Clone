@@ -15,7 +15,8 @@ import logo from "../../assets/images/cred-logo.png";
 const Header = () => {
   const dispatch = useDispatch();
   const user = useSelector((state) => state.user);
-  const { userInfo } = user;
+  const { userInfo, profileInfo } = user;
+  const coins = profileInfo?.profile?.coins;
 
   const logoutHandler = () => {
     dispatch(logout());
@@ -41,6 +42,16 @@ const Header = () => {
             <Nav className="ml-auto">
               {userInfo ? (
                 <>
+                  {coins && (
+                    <LinkContainer
+                      style={{ paddingRight: "2rem" }}
+                      to="/rewards"
+                    >
+                      <NavLink>
+                        <i className="fas fa-coins fa-lg"></i> {coins}
+                      </NavLink>
+                    </LinkContainer>
+                  )}
                   <NavDropdown title={userInfo.user.email} id="username">
                     <LinkContainer to="/profile">
                       <NavDropdown.Item>Profile</NavDropdown.Item>

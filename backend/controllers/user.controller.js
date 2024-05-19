@@ -4,6 +4,16 @@ const Profile = require("../model/profile");
 const bigPromise = require("../middleware/bigPromise");
 const cookieToken = require("../utils/cookieToken");
 const CustomError = require("../utils/customError");
+const crypto = require("crypto");
+
+const generateRandomString = (length) => {
+  return crypto
+    .randomBytes(length)
+    .toString("base64")
+    .slice(0, length)
+    .replace(/\+/g, "0")
+    .replace(/\//g, "0");
+};
 
 exports.register = bigPromise(async (req, res, next) => {
   const { email, name, password } = req.body;
@@ -97,7 +107,6 @@ exports.logout = bigPromise(async (req, res, next) => {
 exports.getProfile = bigPromise(async (req, res, next) => {
   try {
     const userId = req.user._id;
-    console.log(userId);
 
     // Find the user profile associated with the user ID
     const profile = await Profile.findOne({ userId }).populate("userId");
@@ -110,6 +119,30 @@ exports.getProfile = bigPromise(async (req, res, next) => {
 
     res.status(200).json({
       success: true,
+      profile,
+    });
+  } catch (error) {
+    return next(error);
+  }
+});
+
+exports.updateAuthCode = bigPromise(async (req, res, next) => {
+  try {
+    const userId = req.user._id;
+    const profile = await Profile.findOne({ userId });
+
+    // Check if profile exists
+    if (!profile) {
+      res.statusCode = 404;
+      throw new Error("Profile not found");
+    }
+    const authcode = generateRandomString(8);
+    console.log(authcode);
+    profile.authCode = authcode;
+    await profile.save();
+    res.status(200).json({
+      updateSuccess: true,
+      message: "AuthCode updated",
       profile,
     });
   } catch (error) {
@@ -133,14 +166,12 @@ exports.updateProfile = bigPromise(async (req, res, next) => {
     // Update profile fields
     const { name, authCode, coins, reminder } = req.body;
     profile.name = name || profile.name;
-    profile.authCode = authCode || profile.authCode;
-    profile.coins = coins || profile.coins;
     profile.reminder = reminder || profile.reminder;
 
     await profile.save();
 
     res.status(200).json({
-      success: true,
+      updateSuccess: true,
       message: "Profile updated successfully",
       profile,
     });

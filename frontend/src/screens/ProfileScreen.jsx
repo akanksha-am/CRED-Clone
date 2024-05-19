@@ -17,15 +17,17 @@ import { Formik } from "formik";
 import { useNavigate } from "react-router-dom";
 import { resetCardDetails } from "../redux/cardSlice";
 import { listCards } from "../redux/actions/cardActions";
-import { updateUserProfile } from "../redux/actions/userActions";
+import {
+  getUserDetails,
+  updateAuthCode,
+  updateUserProfile,
+} from "../redux/actions/userActions";
 import AlertMessage from "../components/AlertMessage";
 import Loader from "../components/Loader";
 
 const initialValues = {
   name: "",
   authCode: "",
-  email: "",
-  phoneNumber: "",
 };
 
 const ProfileScreen = () => {
@@ -41,13 +43,19 @@ const ProfileScreen = () => {
   const [show, setShow] = useState(false);
 
   const userState = useSelector((state) => state.user);
-  const { userInfo, loading, error } = userState;
-
-  //   const userUpdateProfile = useSelector((state) => state.userUpdateProfile);
-  //   const { success: updateSuccess } = userUpdateProfile;
+  const { userInfo, loading, error, profileInfo } = userState;
 
   const cardList = useSelector((state) => state.card);
   const { cards, error: errorCards, loading: loadingCards } = cardList;
+
+  useEffect(() => {
+    dispatch(getUserDetails());
+    initialValues.name = userInfo.user.name;
+    initialValues.authCode = profileInfo?.profile?.authCode
+      ? profileInfo?.profile?.authCode
+      : "";
+    initialValues.email = userInfo.user.email;
+  }, []);
 
   useEffect(() => {
     if (!userInfo) {
@@ -55,26 +63,33 @@ const ProfileScreen = () => {
     } else {
       dispatch(resetCardDetails());
       dispatch(listCards());
-      if (false) {
+      if (profileInfo?.updateSuccess) {
+        setUpdateAlert(true);
+        setReadOnly(true);
+        setShow(true);
+        setCardAlert(true);
       } else {
-        initialValues.name = userInfo.name;
-        initialValues.authCode = userInfo.authCode ? userInfo.authCode : "";
-        initialValues.email = userInfo.email;
-        initialValues.phoneNumber = userInfo.phoneNumber;
-        setReminder(userInfo.reminder);
+        initialValues.name = userInfo.user.name;
+        initialValues.email = userInfo.user.email;
+        setReminder(userInfo.user.reminder);
       }
+      initialValues.authCode = profileInfo?.profile.authCode
+        ? profileInfo?.profile.authCode
+        : "";
     }
-  }, [dispatch, userInfo]);
+  }, [dispatch, userInfo, profileInfo]);
 
   const submitForm = (values) => {
     const data = { name: values.name };
     if (values.authCode) {
       data.authCode = values.authCode;
     }
-    if (values.phoneNumber) {
-      data.phoneNumber = values.phoneNumber;
-    }
     dispatch(updateUserProfile(data));
+  };
+
+  const getAuthCode = () => {
+    console.log("Inside getAuthCode");
+    dispatch(updateAuthCode());
   };
 
   const updateCloseHandler = () => {
@@ -116,11 +131,11 @@ const ProfileScreen = () => {
 
   return (
     <>
-      {show && error && (
+      {/* {show && error !== null && (
         <AlertMessage onCloseHandler={updateCloseHandler} variant="success">
           Profile updated.
         </AlertMessage>
-      )}
+      )} */}
       <Row>
         <Col md={5}>
           <div className="text-center">
@@ -130,7 +145,7 @@ const ProfileScreen = () => {
                 onCloseHandler={updateCloseHandler}
                 variant="success"
               >
-                Profile updated.
+                {profileInfo.message}
               </AlertMessage>
             )}
             {loading ? (
@@ -153,7 +168,7 @@ const ProfileScreen = () => {
                   placement="left"
                   overlay={
                     readOnly ? (
-                      <Tooltip id={`tooltip-left`}>Edit Profile</Tooltip>
+                      <Tooltip id={`tooltip-left`}>Get AuthCode</Tooltip>
                     ) : (
                       <></>
                     )
@@ -161,7 +176,7 @@ const ProfileScreen = () => {
                 >
                   <Button
                     className="btn-sm"
-                    onClick={() => setReadOnly(false)}
+                    onClick={() => getAuthCode()}
                     disabled={!readOnly}
                     style={{ margin: "0.5rem 1rem" }}
                     variant="outline-primary"
@@ -195,22 +210,6 @@ const ProfileScreen = () => {
                   </Button>
                 </OverlayTrigger>
 
-                <OverlayTrigger
-                  placement="right"
-                  overlay={
-                    <Tooltip id={`tooltip-right`}>View all coupons.</Tooltip>
-                  }
-                >
-                  <Button
-                    className="btn-sm"
-                    variant="outline-primary"
-                    style={{ margin: "0.5rem 1rem" }}
-                    onClick={handleCouponClick}
-                  >
-                    <i className="fas fa-money-check-alt fa-lg"></i>
-                  </Button>
-                </OverlayTrigger>
-
                 <Formik
                   enableReinitialize
                   onSubmit={submitForm}
@@ -227,7 +226,30 @@ const ProfileScreen = () => {
                     dirty,
                   }) => (
                     <Form onSubmit={handleSubmit} style={{ padding: "20px" }}>
-                      <Form.Group as={Row} controlId="name">
+                      <Form.Group as={Row} controlId="email" className="mt-3">
+                        <Form.Label column sm="3" className="form-label">
+                          Email
+                        </Form.Label>
+                        <Col sm="9">
+                          <Form.Control
+                            name="email"
+                            type="email"
+                            placeholder="Enter Email"
+                            value={values.email}
+                            onChange={handleChange}
+                            onBlur={handleBlur}
+                            isInvalid={!!errors.email}
+                            // readOnly
+                            disabled
+                          />
+                          {errors.email && touched.email && (
+                            <Form.Control.Feedback type="invalid">
+                              {errors.email}
+                            </Form.Control.Feedback>
+                          )}
+                        </Col>
+                      </Form.Group>
+                      <Form.Group as={Row} controlId="name" className="mt-3">
                         <Form.Label column sm="3" className="form-label">
                           Name
                         </Form.Label>
@@ -250,16 +272,21 @@ const ProfileScreen = () => {
                           )}
                         </Col>
                       </Form.Group>
-                      <Form.Group as={Row} controlId="authCode">
+                      <Form.Group
+                        as={Row}
+                        controlId="authCode"
+                        className="mt-3"
+                      >
                         <Form.Label column sm="3" className="form-label">
                           Auth Code
                         </Form.Label>
                         <Col sm="9">
                           <InputGroup className="mb-3">
                             <Form.Control
-                              type={showAuthCode ? "text" : "password"}
+                              // type={showAuthCode ? "text" : "password"}
+                              type="text"
                               name="authCode"
-                              placeholder="Enter authCode"
+                              placeholder="Generate authCode"
                               value={values.authCode}
                               onChange={handleChange}
                               onBlur={handleBlur}
@@ -287,52 +314,7 @@ const ProfileScreen = () => {
                           </InputGroup>
                         </Col>
                       </Form.Group>
-                      <Form.Group as={Row} controlId="phoneNumber">
-                        <Form.Label column sm="3" className="form-label">
-                          Phone
-                        </Form.Label>
-                        <Col sm="9">
-                          <Form.Control
-                            type="text"
-                            name="phoneNumber"
-                            placeholder="Enter phone no."
-                            value={values.phoneNumber}
-                            onChange={handleChange}
-                            onBlur={handleBlur}
-                            isInvalid={!!errors.phoneNumber}
-                            disabled={readOnly}
-                          />
-                          {errors.phoneNumber && touched.phoneNumber && (
-                            <Form.Control.Feedback type="invalid">
-                              {errors.phoneNumber}
-                            </Form.Control.Feedback>
-                          )}
-                        </Col>
-                      </Form.Group>
-                      <Form.Group as={Row} controlId="email">
-                        <Form.Label column sm="3" className="form-label">
-                          Email
-                        </Form.Label>
-                        <Col sm="9">
-                          <Form.Control
-                            name="email"
-                            type="email"
-                            placeholder="Enter Email"
-                            value={values.email}
-                            onChange={handleChange}
-                            onBlur={handleBlur}
-                            isInvalid={!!errors.email}
-                            // readOnly
-                            disabled
-                          />
-                          {errors.email && touched.email && (
-                            <Form.Control.Feedback type="invalid">
-                              {errors.email}
-                            </Form.Control.Feedback>
-                          )}
-                        </Col>
-                      </Form.Group>
-                      <Button
+                      {/* <Button
                         type="submit"
                         variant="primary"
                         disabled={readOnly || !(dirty && isValid)}
@@ -341,7 +323,7 @@ const ProfileScreen = () => {
                         }
                       >
                         Update
-                      </Button>
+                      </Button> */}
                     </Form>
                   )}
                 </Formik>
