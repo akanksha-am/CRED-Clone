@@ -7,6 +7,7 @@ import Footer from "./components/Footer";
 import RegisterScreen from "./screens/RegisterScreen";
 import LoginScreen from "./screens/LoginScreen";
 import ProfileScreen from "./screens/ProfileScreen";
+import AddCardScreen from "./screens/AddCardScreen";
 
 function App() {
   return (
@@ -18,6 +19,7 @@ function App() {
             <Route path="/login" Component={LoginScreen} />
             <Route path="/register" Component={RegisterScreen} />
             <Route path="/profile" Component={ProfileScreen} />
+            <Route path="/cards/add/new" Component={AddCardScreen} />
             <Route path="/" Component={HomeScreen} exact />
           </Routes>
         </Container>
