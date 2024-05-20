@@ -12,6 +12,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { getCardById } from "../redux/actions/cardActions";
 import { getRecentStatements } from "../redux/actions/statementActions";
 import CreditCard2 from "../components/CreditCard2";
+import { getRecentStatementsReset } from "../redux/statementSlice";
 
 const getMonthsArr = (year) => {
   let d = new Date();
@@ -59,6 +60,7 @@ const CardScreen = () => {
     if (!userInfo) {
       navigate("/login");
     } else {
+      dispatch(getRecentStatementsReset());
       if (card == null) {
         dispatch(getCardById(cardId));
       } else {

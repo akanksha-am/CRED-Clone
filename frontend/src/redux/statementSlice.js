@@ -25,6 +25,7 @@ const statementSlice = createSlice({
     getStatementsByDateFailure: (state, action) => {
       state.loading = false;
       state.error = action.payload;
+      state.statements = [];
     },
     getStatementsByDateReset: (state) => {
       state.statements = [];
