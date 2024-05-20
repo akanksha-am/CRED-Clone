@@ -8,7 +8,8 @@ exports.luhnValidation = bigPromise(async (req, res, next) => {
   }
   const validCard = await luhn.validate(req.body.cardNumber);
   if (!validCard) {
-    return next(new CustomError("Card is not valid!", 422));
+    res.statusCode = 422;
+    throw new Error("Card is not valid!");
   }
 
   next();

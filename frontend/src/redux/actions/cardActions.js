@@ -14,17 +14,17 @@ import {
 export const addCard = (card) => async (dispatch, getState) => {
   try {
     dispatch(addCardRequest());
-    const {
-      userLogin: { userInfo },
-    } = getState();
+    const { user } = getState();
     const config = {
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${userInfo.token}`,
+        Authorization: `Bearer ${user.userInfo.token}`,
       },
     };
     const { data } = await axios.post(`/api/cards`, card, config);
+    console.log(data);
     dispatch(addCardSuccess(data));
+    console.log("Added card");
   } catch (err) {
     dispatch(
       addCardFailure(
@@ -39,17 +39,15 @@ export const addCard = (card) => async (dispatch, getState) => {
 export const listCards = () => async (dispatch, getState) => {
   try {
     dispatch(getCardListRequest());
-    const {
-      userLogin: { userInfo },
-    } = getState();
+    const { user } = getState();
     const config = {
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${userInfo.token}`,
+        Authorization: `Bearer ${user.userInfo.token}`,
       },
     };
     const { data } = await axios.get(`/api/cards`, config);
-    dispatch(getCardListSuccess(data));
+    dispatch(getCardListSuccess(data.cards));
   } catch (err) {
     dispatch(
       getCardListFailure(

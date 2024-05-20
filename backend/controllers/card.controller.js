@@ -1,3 +1,4 @@
+const mongoose = require("mongoose");
 const bigPromise = require("../middleware/bigPromise");
 const Card = require("../model/card");
 const Profile = require("../model/profile");
@@ -39,14 +40,11 @@ exports.addCard = bigPromise(async (req, res, next) => {
       cvv,
     } = req.body;
 
-    // const hashedCardNumber = encrypt(cardNumber);
-
-    // const allCards = await Card.find({}).populate("");
+    const existingCard = await Card.findOne({ cardNumber });
 
     // if there is not authCode in req (Authcode = N)
     if (authCode === undefined) {
       // If Card alreday exist (Card = T)
-      const existingCard = await Card.findOne({ cardNumber });
       if (existingCard) {
         const profileCard = await ProfileCard.findOne({
           cardId: existingCard._id,
@@ -57,13 +55,12 @@ exports.addCard = bigPromise(async (req, res, next) => {
 
         // If added by same user (User = T)
         if (req.user._id.equals(profile.userId)) {
-          next(new CustomError("Card is Already Added", 409));
+          res.statusCode = 409;
+          throw new Error("Card is Already Added");
         } else {
           //If not added by same user (User = F)
-          console.log("Same User");
-          next(
-            new CustomError("You're are not authorised to add this card", 422)
-          );
+          res.statusCode = 422;
+          throw new Error("You're are not authorised to add this card");
         }
       } else {
         // Card not exists
@@ -91,10 +88,6 @@ exports.addCard = bigPromise(async (req, res, next) => {
         });
       }
     } else {
-      //If there is authcode in req (Authcode = Y)
-
-      const existingCard = await Card.findOne({ cardNumber });
-
       //If card exists
       if (existingCard) {
         const profileCard = await ProfileCard.findOne({
@@ -105,7 +98,8 @@ exports.addCard = bigPromise(async (req, res, next) => {
         });
         // If added by same user (User = T)
         if (req.user._id.equals(profile.userId)) {
-          next(new CustomError("Card is Already Added", 409));
+          res.statusCode = 409;
+          throw new Error("Card is Already Added");
         } else {
           //If not added by same user (User = F)
           //Then check for authCode & add Card
@@ -131,19 +125,27 @@ exports.addCard = bigPromise(async (req, res, next) => {
                 existingCard,
               });
             } else {
-              next(new CustomError("Information not Matching!", 422));
+              res.statusCode = 422;
+              throw new Error("Information not Matching!");
             }
           } else {
-            next(new CustomError("Wrong Auth Code!", 422));
+            res.statusCode = 422;
+            throw new Error("Wrong Auth Code");
           }
         }
       } else {
-        // Card not exists
-        next(new CustomError("Wrong Card Details", 422));
+        res.statusCode = 422;
+        throw new Error("Wrong Card Details");
       }
     }
   } catch (error) {
-    next(new CustomError(error.message, 400));
+    if (error instanceof mongoose.Error.ValidationError) {
+      const firstError = Object.values(error.errors)[0];
+      res.statusCode = 422;
+      next(firstError);
+    } else {
+      next(error);
+    }
   }
 });
 
