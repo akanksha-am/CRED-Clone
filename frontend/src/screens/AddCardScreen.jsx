@@ -104,7 +104,6 @@ const AddCardScreen = () => {
     if (authCode) {
       data.authCode = authCode;
     }
-    console.log(data);
     dispatch(addCard(data));
     setShowAlert(true);
   };

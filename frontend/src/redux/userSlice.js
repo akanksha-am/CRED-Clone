@@ -64,7 +64,6 @@ const userSlice = createSlice({
     },
     updateProfileSuccess: (state, action) => {
       state.loading = false;
-      console.log(action.payload);
       state.profileInfo = action.payload;
     },
     updateProfileFailure: (state, action) => {

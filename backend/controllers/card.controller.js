@@ -163,7 +163,7 @@ exports.getAllCards = bigPromise(async (req, res, next) => {
     const cards = await Card.find({ _id: { $in: cardIds } });
     res.status(200).json({ success: true, cards });
   } catch (error) {
-    next(new CustomError(error.message, 400));
+    next(error);
   }
 });
 
@@ -173,7 +173,8 @@ exports.getCardById = bigPromise(async (req, res, next) => {
     const card = await Card.findById(req.params.card_id);
 
     if (!card) {
-      return next(new CustomError("Card not found", 404));
+      res.statusCode = 404;
+      throw new Error("Card not found");
     }
 
     // Finding all profiles associated with the card
@@ -187,15 +188,14 @@ exports.getCardById = bigPromise(async (req, res, next) => {
     );
 
     if (!associatedUserIds.includes(req.user._id.toString())) {
-      return next(
-        new CustomError("You're not authorized to access this card", 403)
-      );
+      res.statusCode = 404;
+      throw new Error("You're not authorized to access this card");
     }
 
     // Send response with card information
     res.status(200).json({ success: true, card });
   } catch (error) {
-    next(new CustomError(error.message, 500));
+    next(error);
   }
 });
 
@@ -211,7 +211,8 @@ exports.payBill = bigPromise(async (req, res, next) => {
     const profileCards = await ProfileCard.find({ profileId: profile._id });
 
     if (!profileCards || profileCards.length === 0) {
-      return next(new CustomError("No cards associated with the user", 404));
+      res.statusCode = 404;
+      throw new Error("No cards associated with the user");
     }
 
     // Loop Through Cards: For each card associated with the user:
@@ -241,20 +242,21 @@ exports.payBill = bigPromise(async (req, res, next) => {
           userAssociated: req.user.email,
         });
         await transaction.save();
-
         // Send the transaction information in the response.
         return res.status(200).json({ success: true, transaction });
       }
     }
 
     // Handle Not Found: If no matching card is found
-    return next(new CustomError("Requested card not found", 404));
+    res.statusCode = 404;
+    throw new Error("Requested card not found");
   } catch (error) {
-    next(new CustomError(error.message, 500));
+    next(error);
   }
 });
 
 exports.getAllStatements = bigPromise(async (req, res, next) => {
+
   try {
     // Get Profile: Retrieves the profile associated with the currently logged-in user from the database.
     const profile = await Profile.findOne({ userId: req.user._id });
@@ -263,7 +265,8 @@ exports.getAllStatements = bigPromise(async (req, res, next) => {
     const profileCards = await ProfileCard.find({ profileId: profile._id });
 
     if (!profileCards || profileCards.length === 0) {
-      return next(new CustomError("No cards associated with the user", 404));
+      res.statusCode = 404;
+      throw new Error("No cards associated with the user");
     }
 
     // Array to store all transactions
@@ -275,7 +278,7 @@ exports.getAllStatements = bigPromise(async (req, res, next) => {
       const card = await Card.findById(profileCard.cardId);
 
       // Assuming the card number is provided in the request parameters as 'cardNumber'
-      if (req.params.cardNumber === card.cardNumber) {
+      if (req.params.cardNumber == card.cardNumber) {
         // Retrieve Statements: If a matching card is found:
         // Fetches all transactions associated with that card from the database.
         const transactions = await Transaction.find({ cardId: card._id })
@@ -289,18 +292,14 @@ exports.getAllStatements = bigPromise(async (req, res, next) => {
 
     // If no transactions found for the provided card number
     if (allTransactions.length === 0) {
-      return next(
-        new CustomError(
-          "No transactions found for the provided card number",
-          404
-        )
-      );
+      res.statusCode = 404;
+      throw new Error("No transactions found for the provided card number");
     }
 
     // Send the sorted list of transactions as a response.
     res.status(200).json({ success: true, transactions: allTransactions });
   } catch (error) {
-    next(new CustomError(error.message, 500));
+    next(error);
   }
 });
 
@@ -318,7 +317,8 @@ exports.getStatementsYearMonth = bigPromise(async (req, res, next) => {
     const profileCards = await ProfileCard.find({ profileId: profile._id });
 
     if (!profileCards || profileCards.length === 0) {
-      return next(new CustomError("No cards associated with the user", 404));
+      res.statusCode = 404;
+      throw new Error("No cards associated with the user");
     }
 
     // Array to store all transactions
@@ -346,12 +346,8 @@ exports.getStatementsYearMonth = bigPromise(async (req, res, next) => {
 
     // If no transactions found for the provided card number
     if (allTransactions.length === 0) {
-      return next(
-        new CustomError(
-          "No transactions found for the provided card number",
-          404
-        )
-      );
+      res.statusCode = 404;
+      throw new Error("No transactions found for the provided card number");
     }
 
     // Pagination:
@@ -371,7 +367,7 @@ exports.getStatementsYearMonth = bigPromise(async (req, res, next) => {
       page,
     });
   } catch (error) {
-    next(new CustomError(error.message, 500));
+    next(error);
   }
 });
 
@@ -379,7 +375,8 @@ exports.postStatements = bigPromise(async (req, res, next) => {
   try {
     // Check Request Body
     if (!req.body.statements || req.body.statements.length === 0) {
-      return next(new CustomError("Please enter at least one statement", 500));
+      res.statusCode = 404;
+      throw new Error("Please enter at least one statement");
     }
 
     // Extract Card Number, Year, and Month
@@ -421,10 +418,11 @@ exports.postStatements = bigPromise(async (req, res, next) => {
     }
 
     // If no matching card is found, throw an error
-    return next(new CustomError("No matching card found", 500));
+    res.statusCode = 404;
+    throw new Error("Requested card not found");
   } catch (error) {
     // Handle Errors
-    next(new CustomError(error.message, 500));
+    next(error);
   }
 });
 
@@ -457,10 +455,12 @@ exports.getSmartStatementData = bigPromise(async (req, res, next) => {
         });
 
         if (statements.length === 0) {
-          return res.status(200).json({
-            success: true,
-            message: "No transactions found for the specified period",
-          });
+          // return res.status(200).json({
+          //   success: true,
+          //   message: "No transactions found for the specified period",
+          // });
+          res.statusCode = 404;
+          throw new Error("No transactions found for the specified period");
         }
 
         // Loop through all the retrieved statements
@@ -508,7 +508,7 @@ exports.getSmartStatementData = bigPromise(async (req, res, next) => {
     res.status(200).json({ success: true, data: smartStatementData });
   } catch (error) {
     // Handle Not Found
-    next(new CustomError(error.message, 404));
+    next(error);
   }
 });
 
@@ -546,10 +546,8 @@ exports.getSmartStatementYearMonth = bigPromise(async (req, res, next) => {
         });
 
         if (statements.length === 0) {
-          return res.status(200).json({
-            success: true,
-            message: "No transactions found for the specified period",
-          });
+          res.statusCode = 404;
+          throw new Error("No transactions found for the specified period");
         }
 
         // Loop through all the retrieved statements
@@ -597,6 +595,6 @@ exports.getSmartStatementYearMonth = bigPromise(async (req, res, next) => {
     res.status(200).json({ success: true, data: smartStatementData });
   } catch (error) {
     // Handle Not Found
-    next(new CustomError(error.message, 404));
+    next(error);
   }
 });

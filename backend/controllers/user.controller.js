@@ -137,7 +137,6 @@ exports.updateAuthCode = bigPromise(async (req, res, next) => {
       throw new Error("Profile not found");
     }
     const authcode = generateRandomString(8);
-    console.log(authcode);
     profile.authCode = authcode;
     await profile.save();
     res.status(200).json({

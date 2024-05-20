@@ -9,20 +9,18 @@ import {
   getSmartStatementsByMonthRequest,
   getSmartStatementsByMonthSuccess,
   getSmartStatementsByMonthFailure,
-} from "./statementSlice";
+} from "../statementSlice";
 
 export const getStatementsByMonth =
   (cardNo, year, month, pageNumber = "") =>
   async (dispatch, getState) => {
     try {
       dispatch(getStatementsByDateRequest());
-      const {
-        userLogin: { userInfo },
-      } = getState();
+      const { user } = getState();
       const config = {
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${userInfo.token}`,
+          Authorization: `Bearer ${user.userInfo.token}`,
         },
       };
       const { data } = await axios.get(
@@ -46,21 +44,23 @@ export const getRecentStatements =
   async (dispatch, getState) => {
     try {
       dispatch(getRecentStatementsRequest());
-      const {
-        userLogin: { userInfo },
-      } = getState();
+      const { user } = getState();
       const config = {
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${userInfo.token}`,
+          Authorization: `Bearer ${user.userInfo.token}`,
         },
       };
-      let { data } = await axios.get(`/api/cards/${cardNo}/statements`, config);
-      data.reverse();
-      if (data.length > count) {
-        data = data.slice(0, count);
+      let { data } = await axios.get(
+        `/api/cards/${parseInt(cardNo)}/statements`,
+        config
+      );
+      let { transactions } = data;
+      transactions.reverse();
+      if (transactions.length > count) {
+        transactions = transactions.slice(0, count);
       }
-      dispatch(getRecentStatementsSuccess(data));
+      dispatch(getRecentStatementsSuccess(transactions));
     } catch (err) {
       dispatch(
         getRecentStatementsFailure(
@@ -76,13 +76,11 @@ export const getSmartStatementsByMonth =
   (cardNo, year, month) => async (dispatch, getState) => {
     try {
       dispatch(getSmartStatementsByMonthRequest());
-      const {
-        userLogin: { userInfo },
-      } = getState();
+      const { user } = getState();
       const config = {
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${userInfo.token}`,
+          Authorization: `Bearer ${user.userInfo.token}`,
         },
       };
       const { data } = await axios.get(
