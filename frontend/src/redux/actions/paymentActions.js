@@ -3,7 +3,7 @@ import {
   paymentRequest,
   paymentSuccess,
   paymentFailure,
-} from './paymentSlice';
+} from "../paymentSlice";
 
 export const payAmount = (cardNo, amount) => async (dispatch, getState) => {
   try {
@@ -13,7 +13,7 @@ export const payAmount = (cardNo, amount) => async (dispatch, getState) => {
     } = getState();
     const config = {
       headers: {
-        'Content-Type': 'application/json',
+        "Content-Type": "application/json",
         Authorization: `Bearer ${userInfo.token}`,
       },
     };

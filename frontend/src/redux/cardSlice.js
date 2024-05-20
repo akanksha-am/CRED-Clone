@@ -7,7 +7,7 @@ const cardSlice = createSlice({
     error: null,
     success: false,
     cards: [],
-    card: {},
+    card: null,
   },
   reducers: {
     addCardRequest: (state) => {
@@ -26,7 +26,7 @@ const cardSlice = createSlice({
       state.success = false;
     },
     addCardReset: (state) => {
-      state.card = {};
+      state.card = null;
       state.success = false;
     },
     getCardListRequest: (state) => {
@@ -54,7 +54,7 @@ const cardSlice = createSlice({
       state.error = action.payload;
     },
     resetCardDetails: (state) => {
-      state.card = {};
+      state.card = null;
     },
   },
 });

@@ -88,7 +88,6 @@ const ProfileScreen = () => {
   };
 
   const getAuthCode = () => {
-    console.log("Inside getAuthCode");
     dispatch(updateAuthCode());
   };
 
@@ -365,13 +364,13 @@ const ProfileScreen = () => {
                 <tbody>
                   {cards.map((card, index) => {
                     return (
-                      <tr key={card.id}>
+                      <tr key={card._id}>
                         <td>{index + 1}</td>
                         <td>{card.cardNumber}</td>
                         <td>{card.cardOwnerName}</td>
                         <td>{card.outstandingAmount}</td>
                         <td>
-                          <LinkContainer to={`/cards/${card.id}`}>
+                          <LinkContainer to={`/cards/${card._id}`}>
                             <Button
                               className="btn-sm btn btn-outline-info"
                               variant="light"

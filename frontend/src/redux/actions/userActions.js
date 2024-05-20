@@ -131,7 +131,6 @@ export const updateAuthCode = () => async (dispatch, getState) => {
       },
     };
     const { data } = await axios.get(`/api/user/authCode`, config);
-    console.log(data);
     dispatch(updateProfileSuccess(data));
   } catch (err) {
     dispatch(

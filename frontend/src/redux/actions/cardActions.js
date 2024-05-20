@@ -22,9 +22,7 @@ export const addCard = (card) => async (dispatch, getState) => {
       },
     };
     const { data } = await axios.post(`/api/cards`, card, config);
-    console.log(data);
     dispatch(addCardSuccess(data));
-    console.log("Added card");
   } catch (err) {
     dispatch(
       addCardFailure(
@@ -62,19 +60,15 @@ export const listCards = () => async (dispatch, getState) => {
 export const getCardById = (id) => async (dispatch, getState) => {
   try {
     dispatch(getCardDetailsRequest());
-    const {
-      userLogin: { userInfo },
-    } = getState();
+    const { user } = getState();
     const config = {
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${userInfo.token}`,
+        Authorization: `Bearer ${user.userInfo.token}`,
       },
     };
-    console.log("URL is: ", `/api/cards/${id}`);
     const { data } = await axios.get(`/api/cards/${id}`, config);
-    console.log("Card Details", data);
-    dispatch(getCardDetailsSuccess(data));
+    dispatch(getCardDetailsSuccess(data.card));
   } catch (err) {
     dispatch(
       getCardDetailsFailure(

@@ -10,7 +10,7 @@ import statementReducer from "./statementSlice";
 const persistConfig = {
   key: "root",
   storage,
-  whitelist: ["user", "card"],
+  whitelist: ["user", "card", "statement"],
 };
 
 const rootReducer = combineReducers({

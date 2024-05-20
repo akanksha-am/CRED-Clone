@@ -34,7 +34,6 @@ const RegisterScreen = () => {
   }, [userInfo, error]);
 
   const submitForm = (values) => {
-    console.log(values);
     if (values.password !== values.confirmPassword) {
       dispatch(registerFailure("Password & Confirm Password should be equal"));
     } else {
