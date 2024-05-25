@@ -142,7 +142,7 @@ exports.addCard = bigPromise(async (req, res, next) => {
     if (error instanceof mongoose.Error.ValidationError) {
       const firstError = Object.values(error.errors)[0];
       res.statusCode = 422;
-      next(firstError);
+      next(error);
     } else {
       next(error);
     }
