@@ -7,7 +7,7 @@ const statementSlice = createSlice({
     error: null,
     statements: [],
     recentStatements: [],
-    smartStatementsByMonth: {},
+    smartStatementsByMonth: null,
     pages: 0,
     page: 0,
   },
@@ -60,7 +60,7 @@ const statementSlice = createSlice({
       state.error = action.payload;
     },
     getSmartStatementsByMonthReset: (state) => {
-      state.smartStatementsByMonth = {};
+      state.smartStatementsByMonth = null;
     },
   },
 });

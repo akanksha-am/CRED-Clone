@@ -20,7 +20,6 @@ const Branding = () => {
       >
         join 5.9M+ members and win rewards worth ₹5 crores daily.
       </p>
-
       <div className="container h-100">
         <div className="row align-middle">
           <div className="col-md-6 col-lg-4 my-column">

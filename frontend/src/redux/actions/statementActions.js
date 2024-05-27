@@ -87,7 +87,7 @@ export const getSmartStatementsByMonth =
         `/api/cards/${cardNo}/smartStatement/${year}/${month}`,
         config
       );
-      dispatch(getSmartStatementsByMonthSuccess(data));
+      dispatch(getSmartStatementsByMonthSuccess(data.data));
     } catch (err) {
       dispatch(
         getSmartStatementsByMonthFailure(
