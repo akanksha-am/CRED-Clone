@@ -10,6 +10,7 @@ import ProfileScreen from "./screens/ProfileScreen";
 import AddCardScreen from "./screens/AddCardScreen";
 import CardScreen from "./screens/CardScreen";
 import StatementScreen from "./screens/StatementScreen";
+import SmartStatementScreen from "./screens/SmartStatementScreen";
 
 function App() {
   return (
@@ -26,6 +27,11 @@ function App() {
             <Route
               path="/cards/:id/statements/:year/:month"
               Component={StatementScreen}
+              exact
+            />
+            <Route
+              path="/cards/:id/smartstatements/:year/:month"
+              Component={SmartStatementScreen}
               exact
             />
             <Route

@@ -150,7 +150,7 @@ exports.updateAuthCode = bigPromise(async (req, res, next) => {
 });
 
 exports.updateProfile = bigPromise(async (req, res, next) => {
-  try {
+  try {;
     const userId = req.user._id;
 
     // Find the user profile associated with the user ID
@@ -163,9 +163,9 @@ exports.updateProfile = bigPromise(async (req, res, next) => {
     }
 
     // Update profile fields
-    const { name, authCode, coins, reminder } = req.body;
+    const { name, reminder } = req.body;
     profile.name = name || profile.name;
-    profile.reminder = reminder || profile.reminder;
+    profile.reminder = reminder;
 
     await profile.save();
 

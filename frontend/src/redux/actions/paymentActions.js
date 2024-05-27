@@ -8,13 +8,11 @@ import {
 export const payAmount = (cardNo, amount) => async (dispatch, getState) => {
   try {
     dispatch(paymentRequest());
-    const {
-      userLogin: { userInfo },
-    } = getState();
+    const { user } = getState();
     const config = {
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${userInfo.token}`,
+        Authorization: `Bearer ${user.userInfo.token}`,
       },
     };
     const { data } = await axios.post(
@@ -22,6 +20,7 @@ export const payAmount = (cardNo, amount) => async (dispatch, getState) => {
       { amount },
       config
     );
+
     dispatch(paymentSuccess());
   } catch (err) {
     dispatch(
