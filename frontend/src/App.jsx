@@ -9,7 +9,6 @@ import LoginScreen from "./screens/LoginScreen";
 import ProfileScreen from "./screens/ProfileScreen";
 import AddCardScreen from "./screens/AddCardScreen";
 import CardScreen from "./screens/CardScreen";
-import StatementScreen from "./screens/StatementScreen";
 
 function App() {
   return (
@@ -23,16 +22,6 @@ function App() {
             <Route path="/profile" Component={ProfileScreen} />
             <Route path="/cards/add/new" Component={AddCardScreen} />
             <Route path="/cards/:id" Component={CardScreen} exact />
-            <Route
-              path="/cards/:id/statements/:year/:month"
-              Component={StatementScreen}
-              exact
-            />
-            <Route
-              path="/cards/:id/statements/:year/:month/:pageNumber"
-              Component={StatementScreen}
-              exact
-            />
             <Route path="/" Component={HomeScreen} exact />
           </Routes>
         </Container>
