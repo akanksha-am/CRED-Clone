@@ -54,7 +54,6 @@ const cardSlice = createSlice({
       state.error = action.payload;
     },
     resetCardDetails: (state) => {
-      state.cards = [];
       state.card = null;
     },
   },
