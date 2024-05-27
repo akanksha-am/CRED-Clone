@@ -100,7 +100,6 @@ const ModalForm = (props) => {
                   </AlertMessage>
                 )}
                 {loading && <Loader color={"#333940"} />}
-                {/* <Container> */}
                 <Form.Group
                   as={Row}
                   controlId="amount"

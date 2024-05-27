@@ -24,6 +24,13 @@ import {
 } from "../redux/actions/userActions";
 import AlertMessage from "../components/AlertMessage";
 import Loader from "../components/Loader";
+import avatar from "../assets/images/avatar7.png";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+  faBell,
+  faBellSlash,
+  faSquare,
+} from "@fortawesome/free-solid-svg-icons";
 
 const initialValues = {
   name: "",
@@ -71,7 +78,7 @@ const ProfileScreen = () => {
       } else {
         initialValues.name = userInfo.user.name;
         initialValues.email = userInfo.user.email;
-        setReminder(userInfo.user.reminder);
+        setReminder(profileInfo.profile.reminder);
       }
       initialValues.authCode = profileInfo?.profile.authCode
         ? profileInfo?.profile.authCode
@@ -113,11 +120,11 @@ const ProfileScreen = () => {
     setDisableReminder(true);
     const { data } = await axios.patch(
       "/api/user/profile",
-      { reminders: !reminder },
+      { reminder: !reminder },
       config
     );
     setDisableReminder(false);
-    setReminder(data.reminders);
+    setReminder(data.profile.reminder);
   };
 
   const handleCouponClick = () => {
@@ -158,7 +165,7 @@ const ProfileScreen = () => {
                     background: "#333940",
                     marginBottom: "15px",
                   }}
-                  src="images/avatar7.png"
+                  src={avatar}
                   roundedCircle
                 />
                 <br />
@@ -180,7 +187,7 @@ const ProfileScreen = () => {
                     style={{ margin: "0.5rem 1rem" }}
                     variant="outline-primary"
                   >
-                    <i className="far fa-edit"></i>
+                    <FontAwesomeIcon icon={faSquare} size="2xl" />
                   </Button>
                 </OverlayTrigger>
 
@@ -199,13 +206,10 @@ const ProfileScreen = () => {
                     onClick={handleReminderClick}
                     disabled={disableReminder}
                   >
-                    <i
-                      className={
-                        reminder
-                          ? "far fa-bell-slash fa-lg"
-                          : "far fa-bell fa-lg"
-                      }
-                    ></i>
+                    <FontAwesomeIcon
+                      icon={reminder ? faBellSlash : faBell}
+                      size="2xl"
+                    />
                   </Button>
                 </OverlayTrigger>
 

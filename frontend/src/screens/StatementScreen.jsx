@@ -10,7 +10,6 @@ import { getCardById } from "../redux/actions/cardActions";
 import { getStatementsByMonth } from "../redux/actions/statementActions";
 
 const StatementScreen = () => {
-  console.log("Inside StatementScreen");
   const dispatch = useDispatch();
   const params = useParams();
   const navigate = useNavigate();

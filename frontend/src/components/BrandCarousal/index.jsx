@@ -1,11 +1,8 @@
 import "./styles.scss";
-
-// props image address, profile heading profile description, alternative name
-
 const BrandCarousel = () => {
   return (
     <>
-      <div className="container">
+      <div className="container mt-4">
         <h1 className="text-center" style={{ color: "#333840" }}>
           OFFERS YOU CAN'T REFUSE
         </h1>

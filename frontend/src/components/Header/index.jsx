@@ -42,7 +42,7 @@ const Header = () => {
             <Nav className="ml-auto">
               {userInfo ? (
                 <>
-                  {coins && (
+                  {/* {coins && (
                     <LinkContainer
                       style={{ paddingRight: "2rem" }}
                       to="/rewards"
@@ -51,7 +51,7 @@ const Header = () => {
                         <i className="fas fa-coins fa-lg"></i> {coins}
                       </NavLink>
                     </LinkContainer>
-                  )}
+                  )} */}
                   <NavDropdown title={userInfo.user.email} id="username">
                     <LinkContainer to="/profile">
                       <NavDropdown.Item>Profile</NavDropdown.Item>
