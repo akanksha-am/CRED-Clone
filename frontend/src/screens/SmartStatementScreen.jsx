@@ -11,6 +11,8 @@ import { useNavigate, useParams } from "react-router-dom";
 import { getCardById } from "../redux/actions/cardActions";
 import { getSmartStatementsByMonth } from "../redux/actions/statementActions";
 import { getSmartStatementsByMonthReset } from "../redux/statementSlice";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faChartBar, faChartPie } from "@fortawesome/free-solid-svg-icons";
 
 const getRandomColor = (count) => {
   const transBackground = "0.2";
@@ -53,11 +55,13 @@ const SmartStatementScreen = () => {
   const statement = useSelector((state) => state.statement);
 
   const { smartStatementsByMonth: stat, error, loading } = statement;
-  console.log(stat);
   if (stat && !colorCategory.current) {
     colorCategory.current = getRandomColor(stat.categories.length);
     colorVendor.current = getRandomColor(stat.vendors.length);
   }
+
+  console.log(stat);
+  console.log(stat?.categories);
 
   useEffect(() => {
     if (!userInfo) {
@@ -124,13 +128,10 @@ const SmartStatementScreen = () => {
                         size="sm"
                         variant="outline-info"
                       >
-                        <i
-                          className={
-                            categoryPie
-                              ? "far fa-chart-bar fa-lg"
-                              : "fas fa-chart-pie fa-lg"
-                          }
-                        ></i>
+                        <FontAwesomeIcon
+                          icon={categoryPie ? faChartBar : faChartPie}
+                          size="2xl"
+                        />
                       </Button>
                     </OverlayTrigger>
                   )}
@@ -178,13 +179,10 @@ const SmartStatementScreen = () => {
                         size="sm"
                         variant="outline-info"
                       >
-                        <i
-                          className={
-                            vendorPie
-                              ? "far fa-chart-bar fa-lg"
-                              : "fas fa-chart-pie fa-lg"
-                          }
-                        ></i>
+                        <FontAwesomeIcon
+                          icon={vendorPie ? faChartBar : faChartPie}
+                          size="2xl"
+                        />
                       </Button>
                     </OverlayTrigger>
                   )}
