@@ -56,35 +56,38 @@ const ProfileScreen = () => {
   const { cards, error: errorCards, loading: loadingCards } = cardList;
 
   useEffect(() => {
-    dispatch(getUserDetails());
-    initialValues.name = userInfo.user.name;
-    initialValues.authCode = profileInfo?.profile?.authCode
-      ? profileInfo?.profile?.authCode
-      : "";
-    initialValues.email = userInfo.user.email;
-  }, []);
+    console.log("Inside useEffect");
+
+    if (userInfo === null) {
+      navigate("/login");
+      return;
+    }
+
+    dispatch(resetCardDetails());
+    dispatch(listCards());
+
+    if (profileInfo?.updateSuccess) {
+      setUpdateAlert(true);
+      setReadOnly(true);
+      setShow(true);
+      setCardAlert(true);
+    } else {
+      initialValues.name = userInfo.user.name;
+      initialValues.email = userInfo.user.email;
+      setReminder(profileInfo?.profile.reminder);
+    }
+
+    initialValues.authCode = profileInfo?.profile?.authCode || "";
+  }, [dispatch, userInfo, profileInfo]);
 
   useEffect(() => {
-    if (!userInfo) {
-      navigate("/login");
-    } else {
-      dispatch(resetCardDetails());
-      dispatch(listCards());
-      if (profileInfo?.updateSuccess) {
-        setUpdateAlert(true);
-        setReadOnly(true);
-        setShow(true);
-        setCardAlert(true);
-      } else {
-        initialValues.name = userInfo.user.name;
-        initialValues.email = userInfo.user.email;
-        setReminder(profileInfo.profile.reminder);
-      }
-      initialValues.authCode = profileInfo?.profile.authCode
-        ? profileInfo?.profile.authCode
-        : "";
-    }
-  }, [dispatch, userInfo, profileInfo]);
+    if (userInfo === null) return;
+
+    dispatch(getUserDetails());
+    initialValues.name = userInfo.user.name;
+    initialValues.authCode = profileInfo?.profile?.authCode || "";
+    initialValues.email = userInfo.user.email;
+  }, [userInfo]);
 
   const submitForm = (values) => {
     const data = { name: values.name };
