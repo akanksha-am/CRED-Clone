@@ -1,0 +1,9 @@
+services:
+  nodeapp:
+    container_name: cred-backend
+    build: .
+    image: subhamsourav/cred-backend
+    ports:
+      - 5000:5000
+    expose:
+      - 5000
