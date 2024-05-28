@@ -21,8 +21,6 @@ const LoginScreen = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  // const redirect = location.search ? location.search.split("=")[1] : "/";
-
   const userState = useSelector((state) => state.user);
 
   const { loading, error, userInfo } = userState;

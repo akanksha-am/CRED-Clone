@@ -11,9 +11,10 @@ Chart.register(CategoryScale, LinearScale, BarElement, Tooltip, Legend);
 
 const BarChart = (props) => {
   const { labels, color, label, value } = props;
+  console.log(labels);
 
   const data = {
-    labels: labels,
+    labels,
     datasets: [
       {
         label: label,
@@ -24,6 +25,9 @@ const BarChart = (props) => {
       },
     ],
   };
+  console.log(labels);
+  console.log(color);
+  console.log(label);
 
   return (
     <>
@@ -46,7 +50,11 @@ const BarChart = (props) => {
             height={400}
             options={{
               maintainAspectRatio: false,
-              scales: { yAxes: [{ ticks: { beginAtZero: true } }] },
+              plugins: {
+                legend: {
+                  position: "top",
+                },
+              },
             }}
           />
         </div>

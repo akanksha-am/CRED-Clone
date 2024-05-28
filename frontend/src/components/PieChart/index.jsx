@@ -35,12 +35,10 @@ const PieChart = (props) => {
         </div>
       ) : (
         <div
-        //  style={{ width: '800px' }}
         >
           <Pie
             data={data}
             height={400}
-            // width={800}
             options={{ maintainAspectRatio: false }}
           />
         </div>
