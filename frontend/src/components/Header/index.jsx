@@ -1,4 +1,4 @@
-import { Route } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import {
   Navbar,
   Nav,
@@ -13,6 +13,7 @@ import { logout } from "../../redux/userSlice";
 import logo from "../../assets/images/cred-logo.png";
 
 const Header = () => {
+  const navigate = useNavigate();
   const dispatch = useDispatch();
   const user = useSelector((state) => state.user);
   const { userInfo, profileInfo } = user;
@@ -20,6 +21,7 @@ const Header = () => {
 
   const logoutHandler = () => {
     dispatch(logout());
+    navigate("/");
   };
 
   return (
