@@ -32,11 +32,6 @@ import {
   faSquare,
 } from "@fortawesome/free-solid-svg-icons";
 
-const initialValues = {
-  name: "",
-  authCode: "",
-};
-
 const ProfileScreen = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -48,6 +43,10 @@ const ProfileScreen = () => {
   const [reminder, setReminder] = useState(false);
   const [disableReminder, setDisableReminder] = useState(false);
   const [show, setShow] = useState(false);
+  const [initialValues, setInitialValues] = useState({
+    name: "",
+    authCode: "",
+  });
 
   const userState = useSelector((state) => state.user);
   const { userInfo, loading, error, profileInfo } = userState;
@@ -57,6 +56,7 @@ const ProfileScreen = () => {
 
   useEffect(() => {
     console.log("Inside useEffect");
+    console.log(profileInfo?.profile?.authCode);
 
     if (userInfo === null) {
       navigate("/login");
@@ -71,29 +71,28 @@ const ProfileScreen = () => {
       setReadOnly(true);
       setShow(true);
       setCardAlert(true);
+      setInitialValues((prevValues) => ({
+        ...prevValues,
+        authCode: profileInfo.profile.authCode,
+      }));
     } else {
-      initialValues.name = userInfo.user.name;
-      initialValues.email = userInfo.user.email;
+      setInitialValues({
+        name: userInfo.user.name,
+        authCode: "",
+        email: userInfo.user.email,
+      });
       setReminder(profileInfo?.profile.reminder);
     }
-
-    initialValues.authCode = profileInfo?.profile?.authCode || "";
-  }, [dispatch, userInfo, profileInfo]);
+  }, [dispatch, userInfo, profileInfo, navigate]);
 
   useEffect(() => {
     if (userInfo === null) return;
 
     dispatch(getUserDetails());
-    initialValues.name = userInfo.user.name;
-    initialValues.authCode = profileInfo?.profile?.authCode || "";
-    initialValues.email = userInfo.user.email;
-  }, [userInfo]);
+  }, [userInfo, dispatch]);
 
   const submitForm = (values) => {
-    const data = { name: values.name };
-    if (values.authCode) {
-      data.authCode = values.authCode;
-    }
+    const data = { name: values.name, authCode: values.authCode };
     dispatch(updateUserProfile(data));
   };
 
