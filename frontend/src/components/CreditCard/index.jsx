@@ -93,22 +93,22 @@ const CreditCard = ({
           style={style}
         />
         <div className="card-item__cover">
-          <img
+          {/* <img
             alt=""
             src={`/card-background/${BACKGROUND_IMG}`}
             className="card-item__bg"
-          />
+          /> */}
         </div>
 
         <div className="card-item__wrapper">
           <div className="card-item__top">
             <img src={"/chip.png"} alt="" className="card-item__chip" />
             <div className="card-item__type">
-              <img
+              {/* <img
                 alt={useCardType}
                 src={`/card-type/${useCardType}.png`}
                 className="card-item__typeImg"
-              />
+              /> */}
             </div>
           </div>
 
@@ -200,11 +200,11 @@ const CreditCard = ({
 
       <div className="card-item__side -back">
         <div className="card-item__cover">
-          <img
+          {/* <img
             alt=""
             src={`/card-background/${BACKGROUND_IMG}`}
             className="card-item__bg"
-          />
+          /> */}
         </div>
         <div className="card-item__band" />
         <div className="card-item__cvv">
@@ -222,13 +222,13 @@ const CreditCard = ({
               ))}
             </TransitionGroup>
           </div>
-          <div className="card-item__type">
+          {/* <div className="card-item__type">
             <img
               alt="card-type"
               src={"/card-type/visa.png"}
               className="card-item__typeImg"
             />
-          </div>
+          </div> */}
         </div>
       </div>
     </div>
