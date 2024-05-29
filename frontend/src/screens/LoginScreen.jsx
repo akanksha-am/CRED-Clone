@@ -99,6 +99,7 @@ const LoginScreen = () => {
               <br></br>
               <Button
                 type="submit"
+                id = 'login'
                 disabled={!(dirty && isValid)}
                 className={!(dirty && isValid) ? "disabled-btn" : ""}
               >

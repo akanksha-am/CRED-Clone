@@ -140,6 +140,7 @@ const RegisterScreen = () => {
               <br></br>
 
               <Button
+                id = 'register'
                 type="submit"
                 disabled={!(dirty && isValid)}
                 className={!(dirty && isValid) ? "disabled-btn" : ""}
