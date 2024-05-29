@@ -183,6 +183,7 @@ const ProfileScreen = () => {
                   }
                 >
                   <Button
+                    id = "authButton"
                     className="btn-sm"
                     onClick={() => getAuthCode()}
                     disabled={!readOnly}
