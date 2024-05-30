@@ -8,6 +8,7 @@ import Loader from "../components/Loader";
 import { useNavigate, useParams } from "react-router-dom";
 import { getCardById } from "../redux/actions/cardActions";
 import { getStatementsByMonth } from "../redux/actions/statementActions";
+import { getStatementsByDateReset } from "../redux/statementSlice";
 
 const StatementScreen = () => {
   const dispatch = useDispatch();
@@ -38,6 +39,7 @@ const StatementScreen = () => {
     if (!userInfo) {
       navigate("/login");
     } else {
+      dispatch(getStatementsByDateReset());
       if (!card.cardNumber) {
         dispatch(getCardById(cardId));
       } else {
@@ -62,11 +64,11 @@ const StatementScreen = () => {
   return (
     <>
       <h2 style={{ marginTop: "1.5rem" }}>Statements</h2>
-      {show && errorStatements && (
+      {/* {show && errorStatements && (
         <AlertMessage variant="danger" onCloseHandler={onCloseHandler}>
           {errorStatements}
         </AlertMessage>
-      )}
+      )} */}
       {loadingStatements ? (
         <Loader color={"#333940"} />
       ) : (
