@@ -1,0 +1,9 @@
+services:
+  reactapp:
+    container_name: cred-frontend
+    build: .
+    image: subhamsourav/cred-frontend
+    ports:
+      - 80:80
+    expose:
+      - 80
