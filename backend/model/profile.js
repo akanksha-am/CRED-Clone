@@ -5,10 +5,6 @@ const profileSchema = new mongoose.Schema({
     type: String,
     default: null,
   },
-  coins: {
-    type: Number,
-    default: 0,
-  },
   reminder: {
     type: Boolean,
     default: false,

@@ -23,6 +23,7 @@
     "luhn": "^2.4.1",
     "mongodb-memory-server": "^9.2.0",
     "morgan": "^1.10.0",
+    "node-cron": "^3.0.3",
     "nodemailer": "^6.9.13",
     "supertest": "^7.0.0",
     "swagger-ui-express": "^5.0.0",

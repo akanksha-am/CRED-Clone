@@ -19,21 +19,20 @@ app.use(express.urlencoded({ extended: true }));
 app.use(morgan("tiny"));
 app.use(cookieParser());
 
-// importing routes
 const userRoute = require("./routes/user");
 const cardRoute = require("./routes/card");
-// const rewardRoute = require("./routes/reward");
+const reminder = require("./utils/reminder");
 
-// Routes middlewares
 app.use("/api/user", userRoute);
 app.use("/api/cards", cardRoute);
-// app.use("/api/rewards", rewardRoute);
 
 app.use("/", (req, res) => {
   res.send("Welcome to the backend of Cred Clone");
 });
 
 app.use(ErrorHandler);
+
+reminder();
 
 // Wildcard route to handle any other requests
 app.all("*", (req, res) => {
