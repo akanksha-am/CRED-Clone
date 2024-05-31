@@ -8,7 +8,7 @@ const Footer = () => {
     >
       <footer>
         <Container>
-          <div className="row my-5 py-5">
+          <div className="row my-0 py-5">
             <div className="col-12">
               <div className="row ">
                 <div className="col-xl-6 col-md-4 col-sm-4 col-12 my-auto mx-auto a">
@@ -20,9 +20,6 @@ const Footer = () => {
                   </h3>
                 </div>
                 <div className="col-xl-3 col-md-4 col-sm-4 col-12">
-                  <h6 className="mb-3 mb-lg-4 text-muted bold-text mt-sm-0 mt-5">
-                    <b>Menu</b>
-                  </h6>
                 </div>
                 <div className="col-xl-3 col-md-4 col-sm-4 col-12">
                   <h6 className="mb-3 mb-lg-4 text-muted bold-text mt-sm-0 mt-5">

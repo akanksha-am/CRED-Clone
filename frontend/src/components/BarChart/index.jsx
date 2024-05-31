@@ -14,7 +14,7 @@ const BarChart = (props) => {
   console.log(labels);
 
   const data = {
-    labels,
+    labels: labels,
     datasets: [
       {
         label: label,
@@ -25,8 +25,8 @@ const BarChart = (props) => {
       },
     ],
   };
-  console.log(labels);
-  console.log(color);
+  // console.log(labels);
+  // console.log(color);
   console.log(label);
 
   return (
@@ -64,3 +64,7 @@ const BarChart = (props) => {
 };
 
 export default BarChart;
+
+
+
+
