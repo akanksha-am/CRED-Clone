@@ -18,7 +18,7 @@ const statementSlice = createSlice({
     },
     getStatementsByDateSuccess: (state, action) => {
       state.loading = false;
-      state.statements = action.payload.data;
+      state.statements = action.payload.statements;
       state.pages = action.payload.pages;
       state.page = action.payload.page;
     },

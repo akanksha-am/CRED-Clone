@@ -1,23 +1,31 @@
-import { Pagination } from 'react-bootstrap';
-import { LinkContainer } from 'react-router-bootstrap';
+import { Pagination } from "react-bootstrap";
+import { Link } from "react-router-dom";
 
-import './styles.scss';
+import "./styles.scss";
 
 const Paginate = (props) => {
   const { pages, page, utils } = props;
+  const { cardId, year, month } = utils;
+
+  const handlePageChange = (pageNumber) => {
+    utils.setSearchParams({ pageNumber: pageNumber.toString() });
+  };
 
   return (
     pages > 1 && (
       <Pagination className="justify-content-center">
         {[...Array(pages).keys()].map((x) => (
-          <LinkContainer
+          <Pagination.Item
             key={x + 1}
-            to={`/cards/${utils.cardId}/statements/${utils.year}/${
-              utils.month
-            }/${x + 1}`}
+            active={x + 1 === page}
+            onClick={() => handlePageChange(x + 1)}
+            activeLabel=""
+            className={x + 1 === page ? "custom-active-item" : "custom-item"}
           >
-            <Pagination.Item active={x + 1 === page}>{x + 1}</Pagination.Item>
-          </LinkContainer>
+            <Link to={`/cards/${cardId}/statements/${year}/${month}`}>
+              {x + 1}
+            </Link>
+          </Pagination.Item>
         ))}
       </Pagination>
     )

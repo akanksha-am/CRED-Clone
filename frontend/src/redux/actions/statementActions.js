@@ -12,8 +12,7 @@ import {
 } from "../statementSlice";
 
 export const getStatementsByMonth =
-  (cardNo, year, month, pageNumber = "") =>
-  async (dispatch, getState) => {
+  (cardNo, year, month, pageNumber) => async (dispatch, getState) => {
     try {
       dispatch(getStatementsByDateRequest());
       const { user } = getState();
