@@ -379,6 +379,7 @@ const ProfileScreen = () => {
                         <td>
                           <LinkContainer to={`/cards/${card._id}`}>
                             <Button
+                              id ='detail'
                               className="btn-sm btn btn-outline-info"
                               variant="light"
                             >

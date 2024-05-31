@@ -89,8 +89,12 @@ describe('Login Screen UI Test Suite', function () {
            const logoutLink = await dropdownMenu.findElement(By.css('a[data-rr-ui-dropdown-item][href="#"]'));
            await logoutLink.click();
 
-           await driver.wait(until.urlIs("http://localhost/profile"), 10000);
-           await driver.get("http://localhost/profile");
+        //    goto home page
+           await driver.wait(until.urlIs("http://localhost/"), 10000);
+           await driver.get("http://localhost/");
+
+        //    const loginLink = await dropdownMenu.findElement(By.css('a[href="/login"]'));
+        //    await loginLink.click();
 
             // login
             this.timeout(20000); // Increase timeout to 20 seconds for this test
