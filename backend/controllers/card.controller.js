@@ -11,22 +11,6 @@ const daysInMonth = (month, year) => {
   return parseInt(temp.getDate());
 };
 
-const updateCoins = (initialCoins, amount) => {
-  const today = new Date();
-  const currentMonth = parseInt(today.getMonth());
-  const currentYear = parseInt(today.getYear());
-  const numberOfDays = daysInMonth(currentMonth, currentYear);
-  const todayDate = parseInt(today.getDate());
-
-  const daysRemaining = numberOfDays - todayDate;
-  const slope = 0.05 / numberOfDays;
-  const fraction = slope * daysRemaining;
-  const coinsEarned = parseInt(fraction * parseInt(amount));
-  const finalCoins = parseInt(initialCoins) + coinsEarned;
-  // console.log(currentYear, currentMonth, numberOfDays, todayDate, daysRemaining, slope, fraction, coinsEarned, finalCoins);
-  return finalCoins;
-};
-
 exports.addCard = bigPromise(async (req, res, next) => {
   try {
     await Card.validate(req.body);
@@ -205,8 +189,6 @@ exports.payBill = bigPromise(async (req, res, next) => {
     // Get Profile: Retrieves the profile information associated with the currently logged-in user from the database.
     const profile = await Profile.findOne({ userId: req.user._id });
 
-    const coinCount = updateCoins(profile.coins, amount);
-
     // Get User's Cards: Retrieves all the card IDs associated with the user's profile.
     const profileCards = await ProfileCard.find({ profileId: profile._id });
 
@@ -224,8 +206,6 @@ exports.payBill = bigPromise(async (req, res, next) => {
       // Assuming the requested card number is provided in the request body as 'cardNumber'
       if (req.params.cardNumber === card.cardNumber) {
         // Update the user's coin count in the profile.
-        // Assuming the coins are deducted for the bill payment
-        profile.coins = coinCount;
         card.outstandingAmount -= amount;
         await profile.save();
         await card.save();
