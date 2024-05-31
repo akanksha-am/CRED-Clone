@@ -23,12 +23,6 @@ const Footer = () => {
                   <h6 className="mb-3 mb-lg-4 text-muted bold-text mt-sm-0 mt-5">
                     <b>Menu</b>
                   </h6>
-                  <ul className="list-unstyled">
-                    <li>Home</li>
-                    <li>About</li>
-                    <li>Blog</li>
-                    <li>Portfolio</li>
-                  </ul>
                 </div>
                 <div className="col-xl-3 col-md-4 col-sm-4 col-12">
                   <h6 className="mb-3 mb-lg-4 text-muted bold-text mt-sm-0 mt-5">

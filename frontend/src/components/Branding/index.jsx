@@ -21,24 +21,24 @@ const Branding = () => {
         join 5.9M+ members and win rewards worth ₹5 crores daily.
       </p>
       <div className="container h-100">
-        <div className="row align-middle">
-          <div className="col-md-6 col-lg-4 my-column">
-            <div className="card gr-1">
-              <div className="txt">
-                <h1>
+        <div className="row align-right">
+          {/* <div className="col-md-6 col-lg-4 my-column"> */}
+            {/* <div className="card gr-1"> */}
+              {/* <div className="txt"> */}
+                {/* <h1>
                   feel special
                   <br></br>
                   more often.
-                </h1>
-                <p>exclusive rewards for paying your bills</p>
-              </div>
-              <Link to="/rewards">More</Link>
-              <div className="ico-card">
+                </h1> */}
+                {/* <p>exclusive rewards for paying your bills</p>
+              </div> */}
+              {/* <Link to="/rewards">More</Link> */}
+              {/* <div className="ico-card">
                 <i className="fas fa-rupee-sign"></i>
-              </div>
-            </div>
-          </div>
-          <div className="col-md-6 col-lg-4 my-column">
+              </div> */}
+            {/* </div> */}
+          {/* </div> */}
+          <div className="col-md-6 col-lg-6 my-column">
             <div className="card gr-2">
               <div className="txt">
                 <h1>
@@ -54,7 +54,7 @@ const Branding = () => {
               </div>
             </div>
           </div>
-          <div className="col-md-6 col-lg-4 my-column">
+          <div className="col-md-6 col-lg-6 my-column">
             <div className="card gr-3">
               <div className="txt">
                 <h1>
