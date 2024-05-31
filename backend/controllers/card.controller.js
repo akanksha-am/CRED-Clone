@@ -256,7 +256,6 @@ exports.payBill = bigPromise(async (req, res, next) => {
 });
 
 exports.getAllStatements = bigPromise(async (req, res, next) => {
-
   try {
     // Get Profile: Retrieves the profile associated with the currently logged-in user from the database.
     const profile = await Profile.findOne({ userId: req.user._id });
@@ -305,15 +304,16 @@ exports.getAllStatements = bigPromise(async (req, res, next) => {
 
 exports.getStatementsYearMonth = bigPromise(async (req, res, next) => {
   try {
-    // Extract Year and Month: Extracts the year and month from the request parameters and converts them into JavaScript Date objects.
     const { year, month, cardNumber } = req.params;
+    const pageNumber = req.query.pageNumber
+      ? parseInt(req.query.pageNumber)
+      : 1;
+    const perPage = 10;
     const startingDate = new Date(year, month - 1, 1);
     const endingDate = new Date(year, month, 0);
 
-    // Retrieve User Profile: Fetches the profile associated with the currently logged-in user from the database.
     const profile = await Profile.findOne({ userId: req.user._id });
 
-    // Retrieve Card IDs: Fetches all the card IDs associated with the user's profile.
     const profileCards = await ProfileCard.find({ profileId: profile._id });
 
     if (!profileCards || profileCards.length === 0) {
@@ -321,50 +321,48 @@ exports.getStatementsYearMonth = bigPromise(async (req, res, next) => {
       throw new Error("No cards associated with the user");
     }
 
-    // Array to store all transactions
-    let allTransactions = [];
+    // Find the card with the provided cardId
+    const card = await Card.findOne({ cardNumber });
 
-    // Loop Through Cards: For each card associated with the user:
-    for (const profileCard of profileCards) {
-      // Fetches the card details from the database.
-      const card = await Card.findById(profileCard.cardId);
-
-      // Checks if the decrypted card number matches the card number provided in the request parameters.
-      if (req.params.cardNumber === card.cardNumber) {
-        // Retrieve Statements for Specified Period: If a matching card is found:
-        // Fetches all transactions associated with that card and falling within the specified period (between the starting and ending dates).
-        const statements = await Transaction.find({
-          cardId: card._id,
-          transactionDateTime: { $gte: startingDate, $lte: endingDate },
-        })
-          .select("-cardId -cardNumber")
-          .sort({ transactionDateTime: 1 });
-
-        allTransactions = allTransactions.concat(statements);
-      }
+    if (!card) {
+      return res.status(404).json({ error: "Card not found" });
     }
 
-    // If no transactions found for the provided card number
-    if (allTransactions.length === 0) {
-      res.statusCode = 404;
-      throw new Error("No transactions found for the provided card number");
+    // Calculate the starting index for pagination
+    const startIndex = (pageNumber - 1) * perPage;
+
+    // Retrieve Statements for Specified Period
+    const statements = await Transaction.find({
+      cardId: card._id,
+      transactionDateTime: { $gte: startingDate, $lte: endingDate },
+    })
+      .select("-cardId -cardNumber")
+      .sort({ transactionDateTime: -1 })
+      .skip(startIndex)
+      .limit(perPage);
+
+    // Calculate the total number of statements
+    const totalStatements = await Transaction.countDocuments({
+      cardId: card._id,
+      transactionDateTime: { $gte: startingDate, $lte: endingDate },
+    });
+
+    // If no transactions found
+    if (statements.length === 0) {
+      return res
+        .status(404)
+        .json({ error: "No transactions found for the provided card" });
     }
 
-    // Pagination:
-    allTransactions.reverse();
-    const perPage = 10;
-    const page = req.query.pageNumber ? parseInt(req.query.pageNumber) : 1;
-    const totalStatements = allTransactions.length;
+    // Pagination details
     const totalPages = Math.ceil(totalStatements / perPage);
-    const startIndex = (page - 1) * perPage;
-    const endIndex = Math.min(startIndex + perPage, totalStatements);
-    const currentStatements = allTransactions.slice(startIndex, endIndex);
 
     // Send the current page of statements along with pagination details as a JSON response.
     return res.status(200).json({
-      data: currentStatements,
+      statements,
       pages: totalPages,
-      page,
+      page: pageNumber,
+      totalStatements,
     });
   } catch (error) {
     next(error);

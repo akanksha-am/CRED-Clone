@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { useSearchParams } from "react-router-dom";
 
 import AlertMessage from "../components/AlertMessage";
 import TransactionTable from "../components/TransactionTable";
@@ -13,12 +14,13 @@ import { getStatementsByDateReset } from "../redux/statementSlice";
 const StatementScreen = () => {
   const dispatch = useDispatch();
   const params = useParams();
+  const [searchParams, setSearchParams] = useSearchParams();
   const navigate = useNavigate();
 
   const cardId = params.id;
   const year = params.year;
   const month = params.month;
-  const pageNumber = params.pageNumber || 1;
+  const pageNumber = parseInt(searchParams.get("pageNumber") || "1");
 
   const [show, setShow] = useState(false);
 
@@ -49,12 +51,13 @@ const StatementScreen = () => {
         setShow(true);
       }
     }
-  }, [history, userInfo, card, cardId, dispatch, year, month, pageNumber]);
+  }, [navigate, userInfo, card, cardId, dispatch, year, month, pageNumber]);
 
   const utils = {
     cardId,
     year,
     month,
+    setSearchParams,
   };
 
   const onCloseHandler = () => {
