@@ -1,0 +1,203 @@
+openapi: 3.0.0
+info:
+  title: CRED Clone API
+  description: API documentation for the CRED Clone project
+  version: 1.0.0
+servers:
+  - url: http://localhost:5000
+paths:
+  /api/user/signup:
+    post:
+      summary: Register a new user
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/User"
+      responses:
+        "200":
+          description: User registered successfully
+  /api/user/login:
+    post:
+      summary: Login a user
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Users"
+      responses:
+        "200":
+          description: User logged in successfully
+  /api/user/logout:
+    get:
+      summary: Logout a user
+      responses:
+        "200":
+          description: User logged out successfully
+  /api/user/profile:
+    get:
+      summary: Get user profile
+      responses:
+        "200":
+          description: User profile data
+    patch:
+      summary: Update user profile
+      responses:
+        "200":
+          description: User profile updated successfully
+  /api/user/authCode:
+    get:
+      summary: Update user authentication code
+      responses:
+        "200":
+          description: Authentication code updated
+  /api/cards:
+    post:
+      summary: Add a new card
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Card"
+      responses:
+        "200":
+          description: Card added successfully
+    get:
+      summary: Get all cards
+      responses:
+        "200":
+          description: List of all cards
+  /api/cards/{card_id}:
+    get:
+      summary: Get card by ID
+      parameters:
+        - in: path
+          name: card_id
+          schema:
+            type: string
+          required: true
+          description: ID of the card to retrieve
+      responses:
+        "200":
+          description: Card details
+  /api/cards/{card_id}/pay:
+    post:
+      summary: Pay bill for a card
+      parameters:
+        - in: path
+          name: card_id
+          schema:
+            type: string
+          required: true
+          description: ID of the card to pay bill for
+      responses:
+        "200":
+          description: Bill paid successfully
+  /api/cards/{card_id}/statements:
+    get:
+      summary: Get all statements for a card
+      parameters:
+        - in: path
+          name: card_id
+          schema:
+            type: string
+          required: true
+          description: ID of the card to retrieve statements for
+      responses:
+        "200":
+          description: List of all statements
+  /api/cards/{card_id}/statements/{year}/{month}:
+    get:
+      summary: Get statements for a specific year and month
+      parameters:
+        - in: path
+          name: card_id
+          schema:
+            type: string
+          required: true
+          description: ID of the card to retrieve statements for
+        - in: path
+          name: year
+          schema:
+            type: string
+          required: true
+          description: Year of the statements to retrieve
+        - in: path
+          name: month
+          schema:
+            type: string
+          required: true
+          description: Month of the statements to retrieve
+      responses:
+        "200":
+          description: Statements for the specified year and month
+  /api/cards/{card_id}/smartStatement:
+    get:
+      summary: Get smart statement data for a card
+      parameters:
+        - in: path
+          name: card_id
+          schema:
+            type: string
+          required: true
+          description: ID of the card to retrieve smart statement data for
+      responses:
+        "200":
+          description: Smart statement data
+  /api/cards/{card_id}/smartStatement/{year}/{month}:
+    get:
+      summary: Get smart statement data for a specific year and month
+      parameters:
+        - in: path
+          name: card_id
+          schema:
+            type: string
+          required: true
+          description: ID of the card to retrieve smart statement data for
+        - in: path
+          name: year
+          schema:
+            type: string
+          required: true
+          description: Year of the statements to retrieve
+        - in: path
+          name: month
+          schema:
+            type: string
+          required: true
+          description: Month of the statements to retrieve
+      responses:
+        "200":
+          description: Smart statement data for the specified year and month
+components:
+  schemas:
+    User:
+      type: object
+      properties:
+        email:
+          type: string
+        name:
+          type: string
+        password:
+          type: string
+    Card:
+      type: object
+      properties:
+        cardNumber:
+          type: string
+        cardHolderName:
+          type: string
+        expirationDate:
+          type: string
+        cvv:
+          type: string
+    Users:
+      type: object
+      properties:
+        email:
+          type: string
+        password:
+          type: string
