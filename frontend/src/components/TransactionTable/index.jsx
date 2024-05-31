@@ -52,7 +52,7 @@ const TransactionTable = (props) => {
               <th>Vendor</th>
               <th>Category</th>
               <th>Date</th>
-              <th>Outstanding Amount(₹)</th>
+              <th>Transaction Amount(₹)</th>
             </tr>
           </thead>
           <tbody>

@@ -94,7 +94,7 @@ const CardScreen = () => {
         <AlertMessage variant="danger">{error}</AlertMessage>
       ) : (
         <Row>
-          <Col className="responsive-col-1">
+          <Col >
             <h2 className="text-center" style={{ marginTop: "2rem" }}>
               Card Details
             </h2>
