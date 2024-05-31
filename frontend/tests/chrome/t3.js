@@ -97,7 +97,7 @@ describe('Login Screen UI Test Suite', function () {
        // Click the pay now button
        await payButton.click();
 
-       const inpValue = 20;
+       const inpValue = 5;
 
        if (inpValue < currentAmount) {
         

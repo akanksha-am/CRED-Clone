@@ -126,3 +126,76 @@ describe('Login Screen UI Test Suite', function () {
     });
 });
 
+
+
+describe('Login Screen UI Test Suite', function () {
+    let driver;
+
+    before(async function () {
+        this.timeout(30000);
+        driver = await new Builder().forBrowser('firefox').build(); // Change to Firefox
+        driver.manage().window().maximize();
+    });
+
+    after(async function () {
+        this.timeout(10000);
+        if (driver) {
+            await driver.quit();
+        }
+    });
+
+    it('should register with valid credentials', async function () {
+        this.timeout(20000);
+        await driver.get('http://localhost:80/login');
+        const registerLink = await driver.findElement(By.linkText('Register'));
+        await registerLink.click();
+        await driver.wait(until.urlIs("http://localhost/register"), 10000);
+        await driver.get("http://localhost/register");
+        await driver.findElement(By.name('name')).sendKeys('Test01');
+        await driver.findElement(By.name('email')).sendKeys('test01@gmail.com');
+        await driver.findElement(By.name('password')).sendKeys('password');
+        await driver.findElement(By.name('confirmPassword')).sendKeys('password');
+        const registerButton = await driver.findElement(By.id('register'));
+        await driver.sleep(2000);
+        await registerButton.click();
+        await driver.wait(until.urlIs("http://localhost/"), 10000);
+        await driver.get("http://localhost/");
+        const dropdownToggle = await driver.wait(until.elementLocated(By.id('username')), 10000);
+        await driver.wait(until.elementIsVisible(dropdownToggle), 10000);
+        await dropdownToggle.click();
+        const dropdownMenu = await driver.wait(until.elementLocated(By.css('.dropdown-menu')), 10000);
+        await driver.wait(until.elementIsVisible(dropdownMenu), 10000);
+        const profileLink = await dropdownMenu.findElement(By.css('a[href="/profile"]'));
+        await profileLink.click();
+    });
+
+    it('should navigate to "cards/add/new" screen after form submission', async function () {
+        this.timeout(20000);
+        await driver.sleep(2000);
+        await driver.wait(until.urlIs('http://localhost/profile'), 10000);
+        await driver.get('http://localhost/profile');
+        const addCardButton = await driver.wait(until.elementLocated(By.css('a[href="/cards/add/new"]')), 10000);
+        await driver.wait(until.elementIsVisible(addCardButton), 10000);
+        await addCardButton.click();
+        await driver.sleep(2000);
+        await driver.get('http://localhost/cards/add/new');
+        const cardNumberInput = await driver.findElement(By.name('cardNumber'));
+        await cardNumberInput.sendKeys('6011000180331112');
+        const cardHolderInput = await driver.findElement(By.name('cardHolder'));
+        await cardHolderInput.sendKeys('Akanksha');
+        const expirationMonthInput = await driver.findElement(By.name('cardMonth'));
+        await expirationMonthInput.sendKeys('06');
+        const expirationYearInput = await driver.findElement(By.name('cardYear'));
+        await expirationYearInput.sendKeys('26');
+        const cvvInput = await driver.findElement(By.name('cardCvv'));
+        await cvvInput.sendKeys('123');
+        await (await driver.findElement(By.css('button.btn.btn-primary[type="submit"]'))).click();
+    });
+
+    it('should navigate to profile screen after form submission', async function () {
+        this.timeout(20000);
+        await driver.sleep(2000);
+        await driver.wait(until.urlIs('http://localhost/profile'), 10000);
+        await driver.get('http://localhost/profile');
+    });
+});

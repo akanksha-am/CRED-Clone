@@ -79,12 +79,13 @@ describe('Login Screen UI Test Suite', function () {
         // Click the select element to reveal the options
         await yearSelect.click();
 
-        const desiredYear = '2024';
+        const desiredYear = '2022';
         const yearOption = await driver.wait(until.elementLocated(By.xpath(`//option[@value='${desiredYear}']`)), 10000);
         await driver.wait(until.elementIsVisible(yearOption), 10000);
 
         // Click the desired year option
         await yearOption.click();
+        await driver.sleep(2000);
 
         const monthSelect = await driver.wait(until.elementLocated(By.css('.card-input__input.-select')), 10000);
         await driver.wait(until.elementIsVisible(monthSelect), 10000);
@@ -92,15 +93,17 @@ describe('Login Screen UI Test Suite', function () {
         // Click the select element to reveal the options
         await monthSelect.click();
 
-        const desiredMonth = '05';
+        const desiredMonth = '01';
         const monthOption = await driver.wait(until.elementLocated(By.xpath(`//option[@value='${desiredMonth}']`)), 10000);
         await driver.wait(until.elementIsVisible(monthOption), 10000);
 
         // Click the desired month option
         await monthOption.click();
 
+        // await driver.sleep(2000);
+
         // smart button
-        const smartButton = await driver.wait(until.elementLocated(By.css('a[href="/cards/663afc13561d69e8440ef519/smartstatements/2024/5"]')), 10000);
+        const smartButton = await driver.wait(until.elementLocated(By.css('a[href="/cards/663afc13561d69e8440ef519/smartstatements/2022/1"]')), 10000);
        await driver.wait(until.elementIsVisible(smartButton), 10000);
 
        // Click the "smart" button

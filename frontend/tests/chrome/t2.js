@@ -159,19 +159,34 @@ describe('Login Screen UI Test Suite', function () {
 
         // Find form elements and fill them
         const cardNumberInput = await driver.findElement(By.name('cardNumber'));
-        await cardNumberInput.sendKeys('4347699988887777'); // Adjust with test data
+        await cardNumberInput.sendKeys('4701322211111234'); // Adjust with test data
 
         const cardHolderInput = await driver.findElement(By.name('cardHolder'));
-        await cardHolderInput.sendKeys('Akanksha'); // Adjust with test data
+        await cardHolderInput.sendKeys('AAAA'); // Adjust with test data
 
         const expirationMonthInput = await driver.findElement(By.name('cardMonth'));
-        await expirationMonthInput.sendKeys('01'); // Adjust with test data
+        await expirationMonthInput.sendKeys('08'); // Adjust with test data
 
         const expirationYearInput = await driver.findElement(By.name('cardYear'));
-        await expirationYearInput.sendKeys('26'); 
+        await expirationYearInput.sendKeys('32'); 
+
+        // const yearSelect = await driver.wait(until.elementLocated(By.name('cardYear')), 10000);
+        // await driver.wait(until.elementIsVisible(yearSelect), 10000);
+
+        // // Click the select element to reveal the options
+        // await yearSelect.click();
+
+        // const desiredYear = '32';
+        // const yearOption = await driver.wait(until.elementLocated(By.xpath(`//option[@value='${desiredYear}']`)), 10000);
+        const yearOption = await driver.wait(until.elementLocated(By.xpath(`//select[@name='cardYear']//option[@value='2032']`)), 10000);
+
+        await driver.wait(until.elementIsVisible(yearOption), 10000);
+
+        // Click the desired month option
+        await yearOption.click();
 
         const cvvInput = await driver.findElement(By.name('cardCvv'));
-        await cvvInput.sendKeys('555'); 
+        await cvvInput.sendKeys('123'); 
 
         const authInput = await driver.findElement(By.name('authCode'));
         await authInput.sendKeys(authCodeText); 

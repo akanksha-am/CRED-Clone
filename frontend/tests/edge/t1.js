@@ -35,8 +35,8 @@ describe('Login Screen UI Test Suite in Edge', function () {
         await driver.get("http://localhost/register");
 
         // Find the form elements and input the test data
-        await driver.findElement(By.name('name')).sendKeys('Test2');
-        await driver.findElement(By.name('email')).sendKeys('test2@gmail.com');
+        await driver.findElement(By.name('name')).sendKeys('Test4');
+        await driver.findElement(By.name('email')).sendKeys('test4@gmail.com');
         await driver.findElement(By.name('password')).sendKeys('password');
         await driver.findElement(By.name('confirmPassword')).sendKeys('password');
 
@@ -96,19 +96,19 @@ describe('Login Screen UI Test Suite in Edge', function () {
 
         // Find form elements and fill them
         const cardNumberInput = await driver.findElement(By.name('cardNumber'));
-        await cardNumberInput.sendKeys('3566000020000410'); // Adjust with test data
+        await cardNumberInput.sendKeys('4701322211111234'); // Adjust with test data
 
         const cardHolderInput = await driver.findElement(By.name('cardHolder'));
-        await cardHolderInput.sendKeys('Akanksha'); // Adjust with test data
+        await cardHolderInput.sendKeys('mishra'); // Adjust with test data
 
         const expirationMonthInput = await driver.findElement(By.name('cardMonth'));
-        await expirationMonthInput.sendKeys('02'); // Adjust with test data
+        await expirationMonthInput.sendKeys('12'); // Adjust with test data
 
         const expirationYearInput = await driver.findElement(By.name('cardYear'));
         await expirationYearInput.sendKeys('26');
 
         const cvvInput = await driver.findElement(By.name('cardCvv'));
-        await cvvInput.sendKeys('123');
+        await cvvInput.sendKeys('837');
 
         await (await driver.findElement(By.css('button.btn.btn-primary[type="submit"]'))).click();
 
